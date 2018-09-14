@@ -31,11 +31,24 @@
             </label>
             <label>
                 <span>Set Wash: </span>
-                <input type="color" value="#5511EE" v-on:change="updateSetWash($event)"/>
+                <input type="color" value="#0b63f4" v-on:change="updateSetWash($event)"/>
             </label>
             <label>
                 <span>Screenshot: </span>Ctrl + Alt + S
             </label>
+            <hr/>
+            <h3>Graphics:</h3>
+            <ul>
+                <li v-for="item in items" v-if="item.type === 'graphic'">
+                    <label><span>Path: </span><input v-model="item.src" v-on:change="update()"/></label>
+                    <label><span>Width: </span><input type="range" min="1" max="10" step="0.1" v-model:number="item.width" v-on:change="update()"/></label>
+                    <label><span>Height: </span><input type="range" min="1" max="5" step="0.1" v-model:number="item.height" v-on:change="update()"/></label>
+                    <label><span>X Pos: </span><input type="range" min="-30" max="30" step="0.5" v-model:number="item.left" v-on:change="update()"/></label>
+                    <label><span>Y Pos: </span><input type="range" min="4" max="10" step="0.1" v-model:number="item.bottom" v-on:change="update()"/></label>
+                    <button v-on:click="removeItem(item)">Remove</button>
+                </li>
+            </ul>
+            <button v-on:click="addItem('graphic')">Add Graphic</button>
         </div>
 
             <a-scene>
