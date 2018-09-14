@@ -14,9 +14,10 @@ var vm;
 
         data: {
             room: "Fleming",
+            width: 40,
             items: [
-                {type: "stage", width: 56, height: 2, depth: 8},
-                {type: "set", width: 56, height: 11, bottom: 2, back: -4, lighting: "#5511EE"},
+                {type: "stage", width: 40, height: 2, depth: 8},
+                {type: "set", width: 40, height: 11, bottom: 2, back: -4, lighting: "#5511EE"},
                 {type: "screen", width: 16, height: 9, bottom: 5.5, back: -3, surround: 0.33}
             ]
         },
@@ -25,6 +26,16 @@ var vm;
             
             update: function () {
                 render();  
+            },
+            
+            updateWidth: function (event) {
+                var data = this;
+                this.items.forEach(function (item) {
+                    if (item.type === "set" || item.type === "stage") {
+                        item.width = data.width;
+                    }
+                });
+                render();
             },
           
             updateSetWash: function (event) {

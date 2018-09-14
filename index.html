@@ -26,6 +26,10 @@
                 </select>
             </label>
             <label>
+                <span>Width:</span>
+                <input type="range" step="4" min="20" max="80" v-on:change="updateWidth" v-model="width"/> {{width}}ft
+            </label>
+            <label>
                 <span>Set Wash: </span>
                 <input type="color" value="#5511EE" v-on:change="updateSetWash($event)"/>
             </label>
