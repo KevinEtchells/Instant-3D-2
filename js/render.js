@@ -7,11 +7,22 @@ var render;
     
     "use strict";
     
-    var $scene = document.querySelector("#content");
+    var $scene = document.querySelector("#content"),
+        $room = document.querySelector("#room");
     
     render = function () {
         
         $scene.innerHTML = "";
+        
+        if (vm.room === "Fleming") {
+            $room.setAttribute("obj-model", "obj: #fleming-whittle-obj;");
+            $room.setAttribute("rotation", "0 90 0");
+            $room.setAttribute("position", "3 0 70");
+        } else if (vm.room === "Whittle") {
+            $room.setAttribute("obj-model", "obj: #fleming-whittle-obj;");
+            $room.setAttribute("rotation", "0 0 0");
+            $room.setAttribute("position", "49 0 26");
+        }
     
         vm.items.forEach(function (item) {
 

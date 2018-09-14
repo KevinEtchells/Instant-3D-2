@@ -22,6 +22,10 @@ var vm;
         },
         
         methods: {
+            
+            update: function () {
+                render();  
+            },
           
             updateSetWash: function (event) {
                 this.items.forEach(function (item) {

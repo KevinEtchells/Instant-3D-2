@@ -20,8 +20,9 @@
             <h2>Options</h2>
             <label>
                 <span>Room: </span>
-                <select>
+                <select v-model="room" v-on:change="update()">
                     <option>Fleming</option>
+                    <option>Whittle</option>
                 </select>
             </label>
             <label>
@@ -34,15 +35,21 @@
         </div>
 
             <a-scene>
+                
+                <a-assets>
+                    <a-asset-item id="fleming-whittle-obj" src="assets/rooms/fleming-whittle.obj"></a-asset-item>
+                </a-assets>
 
-                <a-sky color="#AAB"></a-sky>
+                <!--<a-sky color="#AAB"></a-sky>-->
+                
+                <a-entity id="room" material="color: #333; metalness: 0;" scale="0.0033 0.0033 0.0033"></a-entity>
                 
                 <a-entity id="content"></a-entity>
                 
                 <!-- floor -->
-                <a-plane color="#222" width="200" height="100" position="0 -6 -10" rotation="-90 0 0"></a-plane>
+                <!--<a-plane color="#222" width="200" height="100" position="0 -6 -10" rotation="-90 0 0"></a-plane>-->
  
-                <a-entity position="0 8 25">
+                <a-entity position="0 6 25">
                     <a-camera></a-camera>
                 </a-entity>
 
