@@ -1,6 +1,8 @@
 /*global Vue*/
 /*global render*/
 /*global window*/
+/*global FileReader*/
+/*global saveAs*/
 
 var vm;
 
@@ -69,6 +71,28 @@ var vm;
                 if (foundIndex !== -1) {
                     this.items.splice(foundIndex, 1);
                 }
+            },
+            
+            openFile: function (event) {
+                var reader = new FileReader(),
+                    self = this;
+                if (event.target.files) {
+                    reader.onload = function(){
+                        var data = JSON.parse(reader.result),
+                            prop;
+                        for (prop in data) {
+                            if (data.hasOwnProperty(prop)) {
+                                self[prop] = data[prop];
+                            }
+                        }
+                        render();
+                    };
+                    reader.readAsText(event.target.files[0]);
+                }
+            },
+            saveFile: function () {
+                var blob = new Blob([JSON.stringify(this.$data)], {type: "text/plain;charset=utf-8"});
+                saveAs(blob, "visual.json");
             }
             
         },

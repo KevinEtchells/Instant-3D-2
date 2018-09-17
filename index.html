@@ -5,13 +5,15 @@
         <title>Instant 3D 2</title>
         <script src="js/libs/aframe.min.js"></script>
         <script src="js/libs/vue.min.js"></script>
+        <script src="js/libs/FileSaver.min.js" defer></script>
         <style>
             body {color: white; font-family: Arial, sans-serif;}
             #app {background-color: rgba(0, 0, 0, 0.7); height: 100vh; left: 0; padding: 5px; position: absolute; top: 0; width: 300px; z-index: 10;}
             h2 {margin: 5px 0;}
             label {display: block; height: 40px; margin-top: 10px;}
             label span {font-weight: bold;}
-            select {padding: 5px;}
+            select, button {padding: 5px;}
+            input[type='file'] {width: 180px;}
         </style>
     </head>
     <body>
@@ -49,6 +51,12 @@
                 </li>
             </ul>
             <button v-on:click="addItem('graphic')">Add Graphic</button>
+            <hr/>
+            <label>
+                <span>Open File: </span>
+                <input type="file" v-on:change="openFile($event)"/>
+            </label>
+            <button v-on:click="saveFile()">Save to File</button>
         </div>
 
             <a-scene>
