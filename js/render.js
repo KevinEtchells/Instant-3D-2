@@ -75,6 +75,13 @@ var render;
             $items.forEach(function ($item) {
                 $scene.appendChild($item);
             });
+            
+            // update set wash colour
+            vm.items.forEach(function (item) {
+                if (item.type === "set") {
+                    document.querySelector("#set-wash").value = item.lighting;
+                } 
+            });
 
         });
         
