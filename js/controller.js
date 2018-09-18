@@ -1,8 +1,10 @@
 /*global Vue*/
 /*global render*/
 /*global window*/
+/*global document*/
 /*global FileReader*/
 /*global saveAs*/
+/*global Blob*/
 
 var vm;
 
@@ -19,9 +21,9 @@ var vm;
             width: 40,
             items: [
                 {type: "stage", width: 40, height: 2, depth: 8},
-                {type: "set", width: 40, height: 11, bottom: 2, back: -4, lighting: "#0b63f4"},
-                {type: "screen", width: 16, height: 9, bottom: 5.5, back: -3, surround: 0.33},
-                {type: "lectern", colour: "#0b63f4"}
+                {type: "set", width: 40, height: 11, yPos: 2, zPos: -4, lighting: "#0b63f4"},
+                {type: "screen", width: 16, height: 9, yPos: 5.5, zPos: -3, surround: 0.33},
+                {type: "lectern", colour: "#0b63f4", id: "lec1", xPos: 14, yPos: 2.56, zPos: 4.8}
             ]
         },
         
@@ -56,9 +58,9 @@ var vm;
                     type: type,
                     width: 8,
                     height: 4,
-                    bottom: 7,
-                    left: 15,
-                    back: -3
+                    yPos: 7,
+                    xPos: 15,
+                    zPos: -3
                 });
             },
             
@@ -72,6 +74,20 @@ var vm;
                 if (foundIndex !== -1) {
                     this.items.splice(foundIndex, 1);
                 }
+            },
+            
+            selectItem: function (clickedItem) {
+                var self = this;
+                // if selected, unselect all other items
+                Vue.nextTick(function () {
+                    if (clickedItem.selected) {
+                        self.items.forEach(function (item) {
+                            if (item.id !== clickedItem.id) {
+                                item.selected = false;
+                            }
+                        });
+                    }
+                });
             },
             
             openFile: function (event) {
@@ -107,3 +123,34 @@ var vm;
     });
 
 }());
+
+    
+document.querySelector("body").onkeydown = function (event) {
+    var key = event.key.toLowerCase();
+    vm.items.forEach(function (item) {
+        if (item.selected) {
+
+            if (key === "i") {
+                item.yPos = item.yPos + 0.1;
+                render(item);
+            } else if (key === "k") {
+                item.yPos = item.yPos - 0.1;
+                render(item);
+            } else if (key === "j") {
+                item.xPos = item.xPos - 0.1;
+                render(item);
+            } else if (key === "l") {
+                item.xPos = item.xPos + 0.1;
+                render(item);
+            } else if (key === "u") {
+                item.zPos = item.zPos - 0.1;
+                render(item);
+            } else if (key === "o") {
+                item.zPos = item.zPos + 0.1;
+                render(item);
+            }
+
+        } 
+    });
+
+};

@@ -10,9 +10,20 @@ var render;
     var $scene = document.querySelector("#content"),
         $room = document.querySelector("#room");
     
-    render = function () {
+    render = function (itemToRender) {
+
+        var items;
         
-        $scene.innerHTML = "";
+        if (itemToRender) { // just render this one item
+            items = [itemToRender];
+            (function () {
+                var el = document.querySelector("#" + itemToRender.id);
+                el.parentNode.removeChild(el);
+            }());
+        } else { // render everything
+            items = vm.items;
+            $scene.innerHTML = "";
+        }
         
         if (vm.room === "Fleming") {
             $room.setAttribute("obj-model", "obj: #fleming-whittle-obj;");
@@ -24,7 +35,7 @@ var render;
             $room.setAttribute("position", "49 0 26");
         }
     
-        vm.items.forEach(function (item) {
+        items.forEach(function (item) {
 
             var $items = [];
 
@@ -32,7 +43,7 @@ var render;
                 $items.push(document.createElement("a-box"));
                 $items[0].setAttribute("width", item.width);
                 $items[0].setAttribute("height", item.height);
-                $items[0].setAttribute("position", "0 " + ((item.bottom || 0) + (item.height / 2)) + " " + (item.back || 0));
+                $items[0].setAttribute("position", "0 " + ((item.yPos || 0) + (item.height / 2)) + " " + (item.zPos || 0));
                 $items[0].setAttribute("color", "#111");
                 $items[0].setAttribute("depth", item.depth);
                 
@@ -40,7 +51,7 @@ var render;
                 $items.push(document.createElement("a-box"));
                 $items[0].setAttribute("width", item.width);
                 $items[0].setAttribute("height", item.height);
-                $items[0].setAttribute("position", "0 " + ((item.bottom || 0) + (item.height / 2)) + " " + (item.back || 0));
+                $items[0].setAttribute("position", "0 " + ((item.yPos || 0) + (item.height / 2)) + " " + (item.zPos || 0));
                 $items[0].setAttribute("color", item.lighting || "#FFF");
                 $items[0].setAttribute("src", "assets/uplighters.png");
                 $items[0].setAttribute("depth", "0.2");
@@ -49,7 +60,7 @@ var render;
                 $items.push(document.createElement("a-box"));
                 $items[0].setAttribute("width", item.width);
                 $items[0].setAttribute("height", item.height);
-                $items[0].setAttribute("position", "0 " + ((item.bottom || 0) + (item.height / 2)) + " " + (item.back || 0));
+                $items[0].setAttribute("position", "0 " + ((item.yPos || 0) + (item.height / 2)) + " " + (item.zPos || 0));
                 $items[0].setAttribute("color", "#FFF");
                 $items[0].setAttribute("depth", "0.1");
 
@@ -60,33 +71,46 @@ var render;
                     $items[1].setAttribute("width", item.width + (2 * item.surround));
                     $items[1].setAttribute("height", item.height + (2 * item.surround));
                     $items[1].setAttribute("depth", "0.1");
-                    $items[1].setAttribute("position", "0 " + ((item.bottom || 0) + (item.height / 2)) + " " + ((item.back || 0) - 0.1));
+                    $items[1].setAttribute("position", "0 " + ((item.yPos || 0) + (item.height / 2)) + " " + ((item.zPos || 0) - 0.1));
                 }
 
             } else if (item.type === "graphic") {
                 $items.push(document.createElement("a-image"));
+                $items[0].setAttribute("id", item.id);
                 $items[0].setAttribute("opacity", "0.8");
                 $items[0].setAttribute("width", item.width);
                 $items[0].setAttribute("height", item.height);
-                $items[0].setAttribute("position", (item.left || 0) + " " + ((item.bottom || 0) + (item.height / 2)) + " " + ((item.back || 0) + 0.1));
+                $items[0].setAttribute("position", (item.xPos || 0) + " " + ((item.yPos || 0) + (item.height / 2)) + " " + ((item.zPos || 0) + 0.1));
                 $items[0].setAttribute("src", "user-content/" + item.src);
                 
             } else if (item.type === "lectern") {
-                document.querySelector("#lectern").children[0].setAttribute("material", "color: " + item.colour);
-                
+                $items.push(document.createElement("a-entity"));
+                $items[0].setAttribute("id", item.id);
+                $items[0].setAttribute("position", (item.xPos || 0) + " " + (item.yPos || 0) + " " + (item.zPos || 0));
+                $items[0].setAttribute("rotation", "0 -15 0");
+                (function () {
+                    var $el1 = document.createElement("a-entity"),
+                        $el2 = document.createElement("a-entity");
+                    $el1.setAttribute("obj-model", "obj: #felt-lectern-external;");
+                    $el1.setAttribute("material", "color: " + item.colour);
+                    $el2.setAttribute("obj-model", "obj: #felt-lectern-internal;");
+                    $el2.setAttribute("material", "color: #000;");
+                    $items[0].appendChild($el1);
+                    $items[0].appendChild($el2);
+                }());
             }
 
             $items.forEach(function ($item) {
                 $scene.appendChild($item);
             });
-            
-            // update set wash colour
-            vm.items.forEach(function (item) {
-                if (item.type === "set") {
-                    document.querySelector("#set-wash").value = item.lighting;
-                } 
-            });
 
+        });
+        
+        // update set wash colour
+        vm.items.forEach(function (item) {
+            if (item.type === "set") {
+                document.querySelector("#set-wash").value = item.lighting;
+            } 
         });
         
     };
