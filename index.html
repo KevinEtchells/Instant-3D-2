@@ -52,6 +52,13 @@
             </ul>
             <button v-on:click="addItem('graphic')">Add Graphic</button>
             <hr/>
+            <h3>Furniture</h3>
+            <ul>
+                <li v-for="item in items" v-if="item.type === 'lectern'">
+                    <label><span>Colour: </span><input type="color" v-model="item.colour" v-on:change="update()"/></label>
+                </li>
+            </ul>
+            <hr/>
             <label>
                 <span>Open File: </span>
                 <input type="file" v-on:change="openFile($event)"/>
@@ -63,9 +70,9 @@
                 
                 <a-assets>
                     <a-asset-item id="fleming-whittle-obj" src="assets/rooms/fleming-whittle.obj"></a-asset-item>
+                    <a-asset-item id="felt-lectern-external" src="assets/felt-lectern-external.obj"></a-asset-item>
+                    <a-asset-item id="felt-lectern-internal" src="assets/felt-lectern-internal.obj"></a-asset-item>
                 </a-assets>
-
-                <!--<a-sky color="#AAB"></a-sky>-->
                 
                 <a-entity id="room" material="color: #333; metalness: 0;" scale="0.0033 0.0033 0.0033"></a-entity>
                 
@@ -74,6 +81,11 @@
                 <!-- floor -->
                 <!--<a-plane color="#222" width="200" height="100" position="0 -6 -10" rotation="-90 0 0"></a-plane>-->
  
+                <a-entity id="lectern" position="14 2.56 4.8" rotation="0 -15 0">
+                    <a-entity obj-model="obj: #felt-lectern-external;" material="color: #33f;"></a-entity>
+                    <a-entity obj-model="obj: #felt-lectern-internal;" material="color: #000;"></a-entity>
+                </a-entity>
+                
                 <a-entity position="0 6 25">
                     <a-camera></a-camera>
                 </a-entity>
@@ -94,8 +106,6 @@
                     <img id="test-mtl" src="obj/baked%20set.png"/>
 
                     <a-asset-item id="coffee-table-obj" src="obj/coffee-table.obj"></a-asset-item>
-                    <a-asset-item id="felt-lectern-external" src="obj/felt-lectern-external.obj"></a-asset-item>
-                    <a-asset-item id="felt-lectern-internal" src="obj/felt-lectern-internal.obj"></a-asset-item>
                     <a-asset-item id="chair-obj" src="obj/chair.obj"></a-asset-item>
                     <a-asset-item id="chair-mtl" src="obj/chair.mtl"></a-asset-item>
                 </a-assets>
@@ -191,11 +201,6 @@
                 <a-entity id="coffee-tables" scale="0.03 0.03 0.03" position="-15.5 -9.9 -13.7">
                     <a-entity obj-model="obj: #coffee-table-obj;" material="color: #bbb; metalness: 0.6;"></a-entity>
                     <a-entity obj-model="obj: #coffee-table-obj;" material="color: #bbb; metalness: 0.6;" position="140 0 0"></a-entity>
-                </a-entity>
-
-                <a-entity id="lectern" position="12 -2.6 -11.4" rotation="0 -20 0">
-                    <a-entity obj-model="obj: #felt-lectern-external;" material="color: #333;"></a-entity>
-                    <a-entity obj-model="obj: #felt-lectern-internal;" material="color: #000;"></a-entity>
                 </a-entity>
 
                 <a-entity id="chairs-SR" position="-5 -4.4 -6" rotation="0 180 0"></a-entity>

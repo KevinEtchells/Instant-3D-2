@@ -20,7 +20,8 @@ var vm;
             items: [
                 {type: "stage", width: 40, height: 2, depth: 8},
                 {type: "set", width: 40, height: 11, bottom: 2, back: -4, lighting: "#0b63f4"},
-                {type: "screen", width: 16, height: 9, bottom: 5.5, back: -3, surround: 0.33}
+                {type: "screen", width: 16, height: 9, bottom: 5.5, back: -3, surround: 0.33},
+                {type: "lectern", colour: "#0b63f4"}
             ]
         },
         

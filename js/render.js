@@ -70,6 +70,10 @@ var render;
                 $items[0].setAttribute("height", item.height);
                 $items[0].setAttribute("position", (item.left || 0) + " " + ((item.bottom || 0) + (item.height / 2)) + " " + ((item.back || 0) + 0.1));
                 $items[0].setAttribute("src", "user-content/" + item.src);
+                
+            } else if (item.type === "lectern") {
+                document.querySelector("#lectern").children[0].setAttribute("material", "color: " + item.colour);
+                
             }
 
             $items.forEach(function ($item) {
