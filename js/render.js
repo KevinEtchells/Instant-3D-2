@@ -101,7 +101,29 @@ var render;
                     $items[0].appendChild($el1);
                     $items[0].appendChild($el2);
                 }());
+
+            } else if (item.type === "top-table") {
+                $items.push(document.createElement("a-entity"));
+                $items[0].setAttribute("id", item.id);
+                $items[0].setAttribute("position", (item.xPos || 0) + " " + (item.yPos || 0) + " " + (item.zPos || 0));
+                (function () {
+                    var i,
+                        $el;
+                    for (i = 0; i < item.size; i = i + 1) {
+                        $el = document.createElement("a-entity");
+                        $el.setAttribute("gltf-model", "#tt-gltf");
+                        $el.setAttribute("position", ((i + 1) * 0.7) + " 0 0");
+                        $items[0].appendChild($el);
+                    }
+                }());
+                
             }
+            
+            /*
+            <a-entity id="top-table">
+                    <a-entity gltf-model="#tt-gltf" position="-4.5 0.68 0.7" ></a-entity>
+                </a-entity>
+*/
 
             $items.forEach(function ($item) {
                 $scene.appendChild($item);

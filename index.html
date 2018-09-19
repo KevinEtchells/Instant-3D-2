@@ -53,10 +53,11 @@
             <hr/>
             <h3>Furniture</h3>
             <ul>
-                <li v-for="item in items" v-if="item.type === 'lectern'">
+                <li v-for="item in items" v-if="item.type === 'lectern' || item.type === 'top-table'">
                     <h4>{{item.type}}</h4>
                     <input type="checkbox" v-model="item.selected" v-on:click="selectItem(item)"/>
-                    <label><span>Colour: </span><input type="color" v-model="item.colour" v-on:change="update()"/></label>
+                    <label v-if="item.type === 'lectern'"><span>Colour: </span><input type="color" v-model="item.colour" v-on:change="update()"/></label>
+                    <label v-if="item.type === 'top-table'"><span>Size: </span><input type="number" v-model="item.size" v-on:change="update()"/></label>
                 </li>
             </ul>
             <hr/>
@@ -73,14 +74,12 @@
                     <a-asset-item id="fleming-whittle" src="assets/rooms/Fleming-Whittle.glb"></a-asset-item>
                     <a-asset-item id="felt-lectern-external" src="assets/felt-lectern-external.obj"></a-asset-item>
                     <a-asset-item id="felt-lectern-internal" src="assets/felt-lectern-internal.obj"></a-asset-item>
-                    <!--<a-asset-item id="tt-gltf" src="assets/top-table.glb"></a-asset-item>-->
+                    <a-asset-item id="tt-gltf" src="assets/top-table.glb"></a-asset-item>
                 </a-assets>
                 
                 <a-entity id="room"></a-entity>
                 
                 <a-entity id="content"></a-entity>
-
-                <!--<a-entity gltf-model="#tt-gltf" position="-4.5 0.68 0.7" ></a-entity>-->
 
                 <!-- floor -->
                 <!--<a-plane color="#222" width="200" height="100" position="0 -6 -10" rotation="-90 0 0"></a-plane>-->
