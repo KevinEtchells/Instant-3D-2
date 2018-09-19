@@ -67,22 +67,25 @@
             <button v-on:click="saveFile()">Save to File</button>
         </div>
 
-            <a-scene>
+            <a-scene background="color: black">
                 
                 <a-assets>
-                    <a-asset-item id="fleming-whittle-obj" src="assets/rooms/fleming-whittle.obj"></a-asset-item>
+                    <a-asset-item id="fleming-whittle" src="assets/rooms/Fleming-Whittle.glb"></a-asset-item>
                     <a-asset-item id="felt-lectern-external" src="assets/felt-lectern-external.obj"></a-asset-item>
                     <a-asset-item id="felt-lectern-internal" src="assets/felt-lectern-internal.obj"></a-asset-item>
+                    <!--<a-asset-item id="tt-gltf" src="assets/top-table.glb"></a-asset-item>-->
                 </a-assets>
                 
-                <a-entity id="room" material="color: #333; metalness: 0;" scale="0.0033 0.0033 0.0033"></a-entity>
+                <a-entity id="room"></a-entity>
                 
                 <a-entity id="content"></a-entity>
-                
+
+                <!--<a-entity gltf-model="#tt-gltf" position="-4.5 0.68 0.7" ></a-entity>-->
+
                 <!-- floor -->
                 <!--<a-plane color="#222" width="200" height="100" position="0 -6 -10" rotation="-90 0 0"></a-plane>-->
 
-                <a-entity position="0 6 25">
+                <a-entity position="0 1.8 20">
                     <a-camera></a-camera>
                 </a-entity>
 

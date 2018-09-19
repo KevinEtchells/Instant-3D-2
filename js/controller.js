@@ -22,8 +22,8 @@ var vm;
             items: [
                 {type: "stage", width: 40, height: 2, depth: 8},
                 {type: "set", width: 40, height: 11, yPos: 2, zPos: -4, lighting: "#0b63f4"},
-                {type: "screen", width: 16, height: 9, yPos: 5.5, zPos: -3, surround: 0.33},
-                {type: "lectern", colour: "#0b63f4", id: "lec1", xPos: 14, yPos: 2.56, zPos: 4.8}
+                {type: "screen", width: 16, height: 9, yPos: 5.5, zPos: -3, surround: 0.2},
+                {type: "lectern", colour: "#0b63f4", id: "lec1", xPos: 4, yPos: -0.73, zPos: 2.1}
             ]
         },
         
