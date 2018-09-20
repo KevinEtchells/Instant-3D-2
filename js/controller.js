@@ -52,16 +52,24 @@ var vm;
                 });
                 render();
             },
+
+            newGraphic: function (item) {
+                var img = new Image();
+                img.onload = function () {
+                    item.ratio = img.height / img.width;
+                    render(item);
+                };
+                img.src = "user-content/" + item.src;
+            },
             
             addItem: function (type) {
                 this.items.push({
-                    id: Date.now(),
+                    id: "item" + Date.now(),
                     type: type,
-                    width: 8,
-                    height: 4,
-                    yPos: 7,
-                    xPos: 15,
-                    zPos: -3
+                    width: 3,
+                    yPos: 2.7,
+                    xPos: 4.3,
+                    zPos: -1.19
                 });
             },
             

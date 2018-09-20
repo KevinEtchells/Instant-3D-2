@@ -21,7 +21,9 @@ var render;
             items = [itemToRender];
             (function () {
                 var $el = document.querySelector("#" + itemToRender.id);
-                $el.parentNode.removeChild($el);
+                if ($el) {
+                    $el.parentNode.removeChild($el);
+                }
             }());
         } else { // render everything
             items = vm.items;
@@ -84,8 +86,8 @@ var render;
                 $items[0].setAttribute("id", item.id);
                 $items[0].setAttribute("opacity", "0.8");
                 $items[0].setAttribute("width", item.width);
-                $items[0].setAttribute("height", item.height);
-                $items[0].setAttribute("position", (item.xPos || 0) + " " + ((item.yPos || 0) + (item.height / 2)) + " " + ((item.zPos || 0) + 0.02));
+                $items[0].setAttribute("height", item.width * item.ratio);
+                $items[0].setAttribute("position", (item.xPos || 0) + " " + (item.yPos || 0) + " " + ((item.zPos || 0) + 0.02));
                 $items[0].setAttribute("src", "user-content/" + item.src);
                 
             } else if (item.type === "lectern") {
