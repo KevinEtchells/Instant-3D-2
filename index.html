@@ -22,7 +22,7 @@
             <h2>Options</h2>
             <label>
                 <span>Room: </span>
-                <select v-model="room" v-on:change="update()">
+                <select v-model="room" v-on:change="update(null, true)">
                     <option>Fleming</option>
                     <option>Whittle</option>
                 </select>
@@ -75,16 +75,22 @@
                     <a-asset-item id="felt-lectern-external" src="assets/felt-lectern-external.obj"></a-asset-item>
                     <a-asset-item id="felt-lectern-internal" src="assets/felt-lectern-internal.obj"></a-asset-item>
                     <a-asset-item id="tt-gltf" src="assets/top-table.glb"></a-asset-item>
+                    <a-asset-item id="chair-purple-obj" src="assets/chair-purple.obj"></a-asset-item>
+                    <a-asset-item id="chair-purple-mtl" src="assets/chair-purple.mtl"></a-asset-item>
+                    <a-asset-item id="chair-pink-obj" src="assets/chair-pink.obj"></a-asset-item>
+                    <a-asset-item id="chair-pink-mtl" src="assets/chair-pink.mtl"></a-asset-item>
                 </a-assets>
                 
                 <a-entity id="room"></a-entity>
                 
                 <a-entity id="content"></a-entity>
+                
+                <a-entity id="chairs"></a-entity>
 
                 <!-- floor -->
                 <!--<a-plane color="#222" width="200" height="100" position="0 -6 -10" rotation="-90 0 0"></a-plane>-->
-
-                <a-entity position="0 1.8 20">
+                
+                <a-entity position="0 1.8 15">
                     <a-camera></a-camera>
                 </a-entity>
 
@@ -104,11 +110,9 @@
                     <img id="test-mtl" src="obj/baked%20set.png"/>
 
                     <a-asset-item id="coffee-table-obj" src="obj/coffee-table.obj"></a-asset-item>
-                    <a-asset-item id="chair-obj" src="obj/chair.obj"></a-asset-item>
-                    <a-asset-item id="chair-mtl" src="obj/chair.mtl"></a-asset-item>
                 </a-assets>
 
-                <a-entity id="room" class="triangle-large-SR" obj-model="obj: #fleming-whittle-obj;" material="color: #333; metalness: 0;" position="-23 -4.94 32" rotation="0 45 0" scale="0.0033 0.0033 0.0033"></a-entity>
+                <a-entity id="room" obj-model="obj: #fleming-whittle-obj;" material="color: #333; metalness: 0;" position="-23 -4.94 32" rotation="0 45 0" scale="0.0033 0.0033 0.0033"></a-entity>
 
                 <a-entity id="test" obj-model="obj: #test-obj;" material="src: #test-mtl; shader: flat; sides: both;" position="0 -2 -10" rotation="0 0 0" scale="0.1 0.1 0.1"></a-entity>
 
@@ -201,9 +205,6 @@
                     <a-entity obj-model="obj: #coffee-table-obj;" material="color: #bbb; metalness: 0.6;" position="140 0 0"></a-entity>
                 </a-entity>
 
-                <a-entity id="chairs-SR" position="-5 -4.4 -6" rotation="0 180 0"></a-entity>
-                <a-entity id="chairs-SL" position="25.5 -4.4 -6" rotation="0 180 0"></a-entity>
-
                 <!--
                 <a-light type="spot" color="#fff" position="35 8 -40" intensity="0.1" angle="25" exponent="0.1"></a-light>
                 <a-light type="spot" color="#fff" position="45 8 -40" intensity="0.1" angle="25" exponent="0.1"></a-light>
@@ -214,9 +215,6 @@
                 <a-light type="point" color="#999" position="0 7 0"></a-light>
                 <a-light type="ambient" color="#050505" position="0 5 0"></a-light>
 
-                <a-entity rotation="0 -12 0">
-                    <a-camera id="camera" position="-6 0 6"></a-camera>
-                </a-entity>
     -->         
             </a-scene>
 

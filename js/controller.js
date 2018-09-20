@@ -30,8 +30,8 @@ var vm;
         
         methods: {
             
-            update: function () {
-                render();  
+            update: function (item, renderRoom) {
+                render(item, renderRoom);
             },
             
             updateWidth: function (event) {
@@ -48,7 +48,7 @@ var vm;
                 this.items.forEach(function (item) {
                     if (item.type === "set") {
                         item.lighting = event.target.value;
-                    } 
+                    }
                 });
                 render();
             },
@@ -95,7 +95,7 @@ var vm;
                 var reader = new FileReader(),
                     self = this;
                 if (event.target.files) {
-                    reader.onload = function(){
+                    reader.onload = function () {
                         var data = JSON.parse(reader.result),
                             prop;
                         for (prop in data) {
@@ -117,41 +117,41 @@ var vm;
         
         created: function () {
             window.setTimeout(function () {
-                render();
+                render(null, true);
             }, 1000);
         }
 
     });
 
-}());
 
-    
-document.querySelector("body").onkeydown = function (event) {
-    var key = event.key.toLowerCase();
-    vm.items.forEach(function (item) {
-        if (item.selected) {
+    document.querySelector("body").onkeydown = function (event) {
+        var key = event.key.toLowerCase();
+        vm.items.forEach(function (item) {
+            if (item.selected) {
 
-            if (key === "i") {
-                item.yPos = item.yPos + 0.1;
-                render(item);
-            } else if (key === "k") {
-                item.yPos = item.yPos - 0.1;
-                render(item);
-            } else if (key === "j") {
-                item.xPos = item.xPos - 0.1;
-                render(item);
-            } else if (key === "l") {
-                item.xPos = item.xPos + 0.1;
-                render(item);
-            } else if (key === "u") {
-                item.zPos = item.zPos - 0.1;
-                render(item);
-            } else if (key === "o") {
-                item.zPos = item.zPos + 0.1;
-                render(item);
+                if (key === "i") {
+                    item.yPos = item.yPos + 0.1;
+                    render(item);
+                } else if (key === "k") {
+                    item.yPos = item.yPos - 0.1;
+                    render(item);
+                } else if (key === "j") {
+                    item.xPos = item.xPos - 0.1;
+                    render(item);
+                } else if (key === "l") {
+                    item.xPos = item.xPos + 0.1;
+                    render(item);
+                } else if (key === "u") {
+                    item.zPos = item.zPos - 0.1;
+                    render(item);
+                } else if (key === "o") {
+                    item.zPos = item.zPos + 0.1;
+                    render(item);
+                }
+
             }
+        });
 
-        } 
-    });
-
-};
+    };
+    
+}());

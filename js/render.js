@@ -10,32 +10,34 @@ var render;
     var $scene = document.querySelector("#content"),
         $room = document.querySelector("#room"),
         feetToMetres = function (value) {
-            return value * 0.3048;  
+            return value * 0.3048;
         };
     
-    render = function (itemToRender) {
+    render = function (itemToRender, renderRoom) {
 
         var items;
         
         if (itemToRender) { // just render this one item
             items = [itemToRender];
             (function () {
-                var el = document.querySelector("#" + itemToRender.id);
-                el.parentNode.removeChild(el);
+                var $el = document.querySelector("#" + itemToRender.id);
+                $el.parentNode.removeChild($el);
             }());
         } else { // render everything
             items = vm.items;
             $scene.innerHTML = "";
         }
-
-        if (vm.room === "Fleming") {
-            $room.setAttribute("gltf-model", "#fleming-whittle");
-            $room.setAttribute("rotation", "0 0 0");
-            $room.setAttribute("position", "0 0 7");
-        } else if (vm.room === "Whittle") {
-            $room.setAttribute("gltf-model", "#fleming-whittle");
-            $room.setAttribute("rotation", "0 0 0");
-            $room.setAttribute("position", "49 0 26");
+        
+        if (renderRoom) {
+            if (vm.room === "Fleming") {
+                $room.setAttribute("gltf-model", "#fleming-whittle");
+                $room.setAttribute("rotation", "0 0 0");
+                $room.setAttribute("position", "0 0 7");
+            } else if (vm.room === "Whittle") {
+                $room.setAttribute("gltf-model", "#fleming-whittle");
+                $room.setAttribute("rotation", "0 270 0");
+                $room.setAttribute("position", "29.4 0 8");
+            }
         }
 
         items.forEach(function (item) {
@@ -118,12 +120,6 @@ var render;
                 }());
                 
             }
-            
-            /*
-            <a-entity id="top-table">
-                    <a-entity gltf-model="#tt-gltf" position="-4.5 0.68 0.7" ></a-entity>
-                </a-entity>
-*/
 
             $items.forEach(function ($item) {
                 $scene.appendChild($item);
@@ -135,9 +131,79 @@ var render;
         vm.items.forEach(function (item) {
             if (item.type === "set") {
                 document.querySelector("#set-wash").value = item.lighting;
-            } 
+            }
         });
         
+        
+        if (renderRoom) {
+            
+            // audience chairs
+            (function () {
+
+                var AISLE_WIDTH = 2.5,
+                    CHAIR_WIDTH = 0.55,
+                    CHAIR_DEPTH = 1.2,
+                    frontRow = 3,
+                    chairsPerRow = (vm.room === "Fleming" ? 18 : 13), // 14 per row for Whittle
+                    chairIndex = 0,
+                    row = 1,
+                    side = "left",
+                    $chairsContainer = document.querySelector("#chairs"),
+                    chairs;
+                
+                chairs = (function () {
+                    var MAX_CHAIRS = (vm.room === "Fleming" ? 12 * 18 : 20 * 13),
+                        chairArray = [],
+                        i,
+                        rnd;
+                    for (i = 0; i < MAX_CHAIRS; i = i + 1) {
+                        rnd = Math.random();
+                        if (rnd < 0.15 && chairArray[chairArray.length - 1] !== "pink" && chairArray[chairArray.length - 2] !== "pink") {
+                            chairArray.push("pink");
+                        } else {
+                            chairArray.push("purple");
+                        }
+                    }
+                    return chairArray;
+                }());
+                
+                // clear existing chairs
+                $chairsContainer.innerHTML = "";
+
+                chairs.forEach(function (colour) {
+
+                    var $el = document.createElement("a-entity"),
+                        xPos;
+
+                    if (chairIndex === chairsPerRow) {
+                        if (side === "left") {
+                            side = "right";
+                        } else {
+                            side = "left";
+                            row = row + 1;
+                        }
+                        chairIndex = 1;
+                    } else {
+                        chairIndex = chairIndex + 1;
+                    }
+
+                    xPos = ((chairIndex - 1) * CHAIR_WIDTH) + (AISLE_WIDTH / 2);
+                    if (side === "left") {
+                        xPos = xPos * -1;
+                    }
+
+                    //console.log(chairIndex + " : " + side + ": " + row + " : " + xPos);
+
+                    $el.setAttribute("obj-model", "obj: #chair-" + colour + "-obj; mtl: #chair-" + colour + "-mtl");
+                    $el.className = "chair";
+                    $el.setAttribute("rotation", "0 180 0");
+                    $el.setAttribute("position", xPos + " 0.58 " + ((row * CHAIR_DEPTH) + frontRow));
+                    $chairsContainer.appendChild($el);
+                });
+            }());
+
+        }
+
     };
 
 }());
