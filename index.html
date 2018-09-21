@@ -89,132 +89,13 @@
                 <!-- floor -->
                 <!--<a-plane color="#222" width="200" height="100" position="0 -6 -10" rotation="-90 0 0"></a-plane>-->
                 
+                <a-entity light="type:ambient;intensity:0.1"></a-entity>
+                <a-entity light="intensity:0.8" position="-0.5 2.1 6.3" rotation="19 0 0"></a-entity>
+                
                 <a-entity position="0 1.8 15">
                     <a-camera></a-camera>
                 </a-entity>
 
-    <!--
-                <a-assets>
-                    <a-asset-item id="fleming-whittle-obj" src="obj/fleming-whittle.obj"></a-asset-item>
-                    <img id="chroma180" src="assets/chromas2-inverted.png"/>
-                    <img id="chromabatten" src="assets/chromas2.png"/>
-                    <img id="suede" src="assets/suede1.jpg"/>
-                    <img id="set-graphic1" src="assets/set-graphic1.png"/>
-                    <img id="set-graphic2" src="assets/set-graphic2.png"/>
-                    <a-asset-item id="triangle_4x12" src="obj/triangle_4x12.obj"></a-asset-item>
-                    <a-asset-item id="bucket-chair-obj" src="obj/bucket-chair.obj"></a-asset-item>
-                    <a-asset-item id="bucket-chair-mtl" src="obj/bucket-chair.mtl"></a-asset-item>
-
-                    <a-asset-item id="test-obj" src="obj/test.obj"></a-asset-item>
-                    <img id="test-mtl" src="obj/baked%20set.png"/>
-
-                    <a-asset-item id="coffee-table-obj" src="obj/coffee-table.obj"></a-asset-item>
-                </a-assets>
-
-                <a-entity id="room" obj-model="obj: #fleming-whittle-obj;" material="color: #333; metalness: 0;" position="-23 -4.94 32" rotation="0 45 0" scale="0.0033 0.0033 0.0033"></a-entity>
-
-                <a-entity id="test" obj-model="obj: #test-obj;" material="src: #test-mtl; shader: flat; sides: both;" position="0 -2 -10" rotation="0 0 0" scale="0.1 0.1 0.1"></a-entity>
-
-                <a-entity id="set-option1" position="0 2 -21.8" visible="false">
-                    <a-entity class="header" geometry="primitive: box" color="#888" scale="15.25 1 0.2" position="0 6 0" material="#suede"></a-entity>
-                    <a-entity class="set" geometry="primitive: box" color="#888" scale="48 11 0.2" material="#suede"></a-entity>
-
-                    <a-image class="set-wash-centre" color="#8e21ea" opacity="0.5" width="15.3" height="12" position="0 0.5 0.15" src="#chromabatten"></a-image>
-                    <a-image class="set-wash-SR" color="#8e21ea" opacity="0.5" width="16.3" height="11" position="-15.8 0 0.15" src="#chromabatten"></a-image>
-                    <a-image class="set-wash-SL" color="#8e21ea" opacity="0.5" width="16.3" height="11" position="15.8 0 0.15" src="#chromabatten"></a-image>
-
-                    <a-image class="graphic-SR" width="10" height="5" position="-15.5 2.3 0.2" src="#set-graphic1"></a-image>
-                    <a-image class="graphic-SL logo1" width="10" height="5" position="15.5 2.3 0.2" src="#set-graphic1"></a-image>
-                    <a-image class="graphic-SL logo2" width="10" height="5" scale="0.9 0.9 0.9" position="15.5 2.8 0.2" src="#set-graphic2" visible="false"></a-image>
-
-                </a-entity>
-
-                <a-entity id="set-option2" position="0 1.5 -21.8" visible="false">
-
-                    <a-entity class="header" geometry="primitive: box" color="#888" scale="15.25 1 0.2" position="0 6.5 0" material="#suede"></a-entity>
-                    <a-entity class="side-screen-SR" geometry="primitive: box" color="#888" scale="1 11 0.2" position="-7 0.7 0" material="#suede"></a-entity>
-                    <a-entity class="side-screen-SL" geometry="primitive: box" color="#888" scale="1 11 0.2" position="7 0.7 0" material="#suede"></a-entity>
-                    <a-entity class="underscreen" geometry="primitive: box" color="#888" scale="13.25 3.5 0.2" position="0 -2.85 0" material="#suede"></a-entity>
-
-                    <a-entity class="triangle-large-SR" obj-model="obj: #triangle_4x12-obj;" position="-9.5 1 0" rotation="90 0 0" material="#suede"></a-entity>
-                    <a-entity class="triangle-large-SL" obj-model="obj: #triangle_4x12-obj;" position="9.5 1 0" rotation="90 0 180" material="#suede"></a-entity>
-
-                    <a-entity class="triangle-small-SR" obj-model="obj: #triangle_2x11-obj;" position="-11.1 0.7 0" rotation="90 0 0" material="#suede"></a-entity>
-                    <a-entity class="triangle-small-SL" obj-model="obj: #triangle_2x11-obj;" position="11.1 0.7 0" rotation="90 0 180" material="#suede"></a-entity>
-
-                    <a-entity class="side-SR" geometry="primitive: box" color="#888" scale="12 11 0.2" position="-17.9 0.7 0" material="#suede"></a-entity>
-                    <a-image color="#8e21ea" opacity="0.45" width="12" height="11" position="-17.9 0.7 0.15" src="#chromabatten"></a-image>
-                    <a-entity class="side-SL" geometry="primitive: box" color="#888" scale="12 11 0.2" position="17.9 0.7 0" material="#suede"></a-entity>
-                    <a-image color="#8e21ea" opacity="0.45" width="12" height="11" position="17.9 0.7 0.15" src="#chromabatten"></a-image>
-
-                    <a-entity class="back-flat-SR" geometry="primitive: box" color="#888" scale="4 11 0.2" position="-10.5 0.7 -2" material="#suede"></a-entity>                
-                    <a-entity class="back-flat-SL" geometry="primitive: box" color="#888" scale="4 11 0.2" position="10.5 0.7 -2" material="#suede"></a-entity>
-                    <a-image class="set-wash-back" color="#f00" opacity="0.5" width="47" height="11" position="0 0.7 -1.8" src="#chromabatten"></a-image>
-
-                    <a-entity obj-model="obj: #triangle_4x12-plane;" material="src: #chromabatten; color: #8e21ea; opacity: 0.45; shader: flat;" position="-9.5 1 0.25"></a-entity>
-                    <a-entity obj-model="obj: #triangle_4x12-plane;" material="src: #chromabatten; side: double; color: #8e21ea; opacity: 0.45; shader: flat;" position="9.56 1 0.25" rotation="0 180 0"></a-entity>
-
-                    <a-entity obj-model="obj: #triangle_2x11-plane;" material="src: #chroma180; color: #8e21ea; opacity: 0.45; shader: flat;" position="-10.89 0.7 0.16" rotation="90 0 0"></a-entity>
-                    <a-entity obj-model="obj: #triangle_2x11-plane;" material="src: #chromabatten; side: double; color: #8e21ea; opacity: 0.45; shader: flat;" position="10.89 0.7 0.16" rotation="90 180 0"></a-entity>
-
-                    <a-image class="set-wash-centre" color="#8e21ea" opacity="0.45" width="15.25" height="12" position="0 1 0.15" src="#chromabatten"></a-image>
-
-                    <a-image class="graphic-SR" width="10" height="5" position="-17.6 3.1 0.2" src="#set-graphic1"></a-image>
-                    <a-image class="graphic-SL logo1" width="10" height="5" position="17.6 3.1 0.2" src="#set-graphic1"></a-image>
-                    <a-image class="graphic-SL logo2" width="10" height="5" scale="0.8 0.8 0.8" position="17.3 3.6 0.2" src="#set-graphic2" visible="false"></a-image>
-
-                </a-entity>
-
-                <a-entity id="set-option3" position="0 1.5 -21.8" visible="true">
-
-                    <a-entity class="set-back" geometry="primitive: box;" scale="47 11 0.15" position="0 0.7 -1.8" material="color: #c00; src: #chromabatten; shader: flat;"></a-entity>
-
-                    <a-image class="graphic-SR" width="10" height="5" position="-15.8 3.1 -1.7" opacity="0.8" src="#set-graphic1"></a-image>
-                    <a-image class="graphic-SL logo1" width="10" height="5" position="15.8 3.1 -1.7" opacity="0.8" src="#set-graphic1"></a-image>
-                    <a-image class="graphic-SL logo2" width="10" height="5" scale="0.8 0.8 0.8" position="15.1 3.6 0.2" opacity="0.85" src="#set-graphic2" visible="false"></a-image>
-
-                    <a-entity class="set-centre" geometry="primitive: box;" material="src: #chromabatten; color: #8e21ea; shader: flat;" scale="15.2 12 0.15" position="0 1 0.1"></a-entity>
-
-                    <!-- 4x12 triangles
-                    <a-entity obj-model="obj: #triangle_4x12;" material="src: #chroma180; color: #8e21ea; shader: flat;" position="-9.45 1 0"></a-entity>
-                    <a-entity obj-model="obj: #triangle_4x12;" material="src: #chroma180; color: #8e21ea; shader: flat;" position="9.5 1 0.1" rotation="0 180 0"></a-entity>
-
-                    <!-- 2x11 triangles
-                    <a-entity obj-model="obj: #triangle_4x12;" material="src: #chroma180;  color: #8e21ea; shader: flat;" position="-20.9 0.7 0" rotation="0 180 0" scale="0.5 0.92 1"></a-entity>
-                    <a-entity obj-model="obj: #triangle_4x12;" material="src: #chroma180; color: #8e21ea; shader: flat;" position="20.85 0.7 0" scale="0.5 0.92 1"></a-entity>
-
-                    <a-entity geometry="primitive: box;" material="src: #chromabatten; color: #8e21ea; shader: flat;" scale="2.2 11 0.15" position="-22.9 0.7 0.2"></a-entity>
-                    <a-entity geometry="primitive: box;" material="src: #chromabatten; color: #8e21ea; shader: flat;" scale="2.2 11 0.15" position="22.9 0.7 0.2"></a-entity>
-
-                </a-entity>
-
-                <a-box id="screen-surround" color="#000" width="14.15" height="8.4" depth="0.2" position="0 3.7 -21.6"></a-box>
-                <a-box id="screen" color="#fff" width="13.25" height="7.5" depth="0.2" position="0 3.7 -21.5"></a-box>
-
-                <a-entity id="bucket-chairs" scale="0.11 0.11 0.11" position="-19 -3 -15" rotation="0 10 0">
-                    <a-entity obj-model="obj: #bucket-chair-obj; mtl: #bucket-chair-mtl;" rotation="0 40 0"></a-entity>
-                    <a-entity obj-model="obj: #bucket-chair-obj; mtl: #bucket-chair-mtl;" rotation="0 20 0" position="19  0 -11"></a-entity>
-                    <a-entity obj-model="obj: #bucket-chair-obj; mtl: #bucket-chair-mtl;" rotation="0 0 0" position="40 0 -15"></a-entity>
-                    <a-entity obj-model="obj: #bucket-chair-obj; mtl: #bucket-chair-mtl;" rotation="0 -20 0" position="61 0 -11"></a-entity>
-                    <a-entity obj-model="obj: #bucket-chair-obj; mtl: #bucket-chair-mtl;" rotation="0 -40 0" position="80 0 0"></a-entity>
-                </a-entity>
-
-                <a-entity id="coffee-tables" scale="0.03 0.03 0.03" position="-15.5 -9.9 -13.7">
-                    <a-entity obj-model="obj: #coffee-table-obj;" material="color: #bbb; metalness: 0.6;"></a-entity>
-                    <a-entity obj-model="obj: #coffee-table-obj;" material="color: #bbb; metalness: 0.6;" position="140 0 0"></a-entity>
-                </a-entity>
-
-                <!--
-                <a-light type="spot" color="#fff" position="35 8 -40" intensity="0.1" angle="25" exponent="0.1"></a-light>
-                <a-light type="spot" color="#fff" position="45 8 -40" intensity="0.1" angle="25" exponent="0.1"></a-light>
-
-
-                <a-entity light="type: spot; intensity: 1; angle: 10; target: #lectern;" geometry="translate: 0 0 -10"></a-entity>
-
-                <a-light type="point" color="#999" position="0 7 0"></a-light>
-                <a-light type="ambient" color="#050505" position="0 5 0"></a-light>
-
-    -->         
             </a-scene>
 
         <script src="js/render.js"></script>

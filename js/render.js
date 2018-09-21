@@ -97,13 +97,27 @@ var render;
                 $items[0].setAttribute("rotation", "0 -15 0");
                 (function () {
                     var $el1 = document.createElement("a-entity"),
-                        $el2 = document.createElement("a-entity");
+                        $el2 = document.createElement("a-entity"),
+                        $light1 = document.createElement("a-entity"),
+                        $light2 = document.createElement("a-entity");
                     $el1.setAttribute("obj-model", "obj: #felt-lectern-external;");
                     $el1.setAttribute("material", "color: " + item.colour);
                     $el2.setAttribute("obj-model", "obj: #felt-lectern-internal;");
                     $el2.setAttribute("material", "color: #000;");
+
+                    // lights
+                    $light1.setAttribute("light", "angle:15;type:spot;penumbra:1;castShadow:true");
+                    $light2.setAttribute("light", "angle:15;type:spot;penumbra:1;castShadow:true");
+                    $light1.setAttribute("position", "2 5 1");
+                    $light2.setAttribute("position", "-2.4 5 2");
+                    $light1.setAttribute("rotation", "-41.6 43.4 28.9");
+                    $light2.setAttribute("rotation", "-38 -29 5.5");
+                    $el1.appendChild($light1);
+                    $el1.appendChild($light2);
+                    
                     $items[0].appendChild($el1);
                     $items[0].appendChild($el2);
+
                 }());
 
             } else if (item.type === "top-table") {
