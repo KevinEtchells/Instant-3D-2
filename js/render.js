@@ -55,13 +55,29 @@ var render;
                 $items[0].setAttribute("depth", feetToMetres(item.depth));
                 
             } else if (item.type === "set") {
-                $items.push(document.createElement("a-box"));
-                $items[0].setAttribute("width", feetToMetres(item.width));
-                $items[0].setAttribute("height", feetToMetres(item.height));
-                $items[0].setAttribute("position", "0 " + (feetToMetres(item.yPos || 0) + (feetToMetres(item.height) / 2)) + " " + feetToMetres(item.zPos || 0));
-                $items[0].setAttribute("color", item.lighting || "#FFF");
-                $items[0].setAttribute("src", "assets/uplighters.png");
-                $items[0].setAttribute("depth", "0.05");
+                
+                (function () {
+                    var i,
+                        startXPos = (feetToMetres(item.width) / -2) + 0.61;
+                    for (i = 0; i < item.width / 4; i = i + 1) {
+                        
+                        // set panel
+                        $items.push(document.createElement("a-box"));
+                        $items[i * 2].setAttribute("width", 1.22);
+                        $items[i * 2].setAttribute("height", feetToMetres(item.height));
+                        $items[i * 2].setAttribute("position", ((i * 1.2205) + startXPos) + " " + (feetToMetres(item.yPos || 0) + (feetToMetres(item.height) / 2)) + " " + feetToMetres(item.zPos || 0));
+                        $items[i * 2].setAttribute("color", item.lighting || "#FFF");
+                        $items[i * 2].setAttribute("src", "assets/uplighters.png");
+                        $items[i * 2].setAttribute("depth", "0.05");
+                        
+                        // chromabatten
+                        $items.push(document.createElement("a-entity"));
+                        $items[(i * 2) + 1].setAttribute("gltf-model", "#chromabatten");
+                        //$items[(i * 2) + 1].id = "chromabatten" + i;
+                        $items[(i * 2) + 1].setAttribute("position", ((i * 1.22) + startXPos) + " 0.68 " + (feetToMetres(item.zPos || 0) + 0.2));
+
+                    }
+                }());
 
             } else if (item.type === "screen") {
                 $items.push(document.createElement("a-box"));
@@ -159,7 +175,7 @@ var render;
                 var AISLE_WIDTH = 2.5,
                     CHAIR_WIDTH = 0.55,
                     CHAIR_DEPTH = 1.2,
-                    frontRow = 3,
+                    frontRow = 2.5,
                     chairsPerRow = (vm.room === "Fleming" ? 18 : 13), // 14 per row for Whittle
                     chairIndex = 0,
                     row = 1,
