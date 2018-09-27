@@ -39,6 +39,9 @@ var render;
                 $room.setAttribute("gltf-model", "#fleming-whittle");
                 $room.setAttribute("rotation", "0 270 0");
                 $room.setAttribute("position", "29.4 0 8");
+            } else if (vm.room === "Mountbatten") {
+                $room.setAttribute("gltf-model", "#mountbatten");
+                $room.setAttribute("position", "-31.8 0 0.7");
             }
         }
 
@@ -46,7 +49,7 @@ var render;
 
             var $items = [];
 
-            if (item.type === "stage") {
+            if (item.type === "stage" && (vm.room === "Fleming" || vm.room === "Whittle")) {
                 $items.push(document.createElement("a-box"));
                 $items[0].setAttribute("width", feetToMetres(item.width));
                 $items[0].setAttribute("height", feetToMetres(item.height));
@@ -56,38 +59,67 @@ var render;
                 
             } else if (item.type === "set") {
                 
-                (function () {
-                    var i,
-                        startXPos = (feetToMetres(item.width) / -2) + 0.61;
-                    for (i = 0; i < item.width / 4; i = i + 1) {
-                        
-                        // set panel
-                        $items.push(document.createElement("a-box"));
-                        $items[i * 2].setAttribute("width", 1.22);
-                        $items[i * 2].setAttribute("height", feetToMetres(item.height));
-                        $items[i * 2].setAttribute("position", ((i * 1.2205) + startXPos) + " " + (feetToMetres(item.yPos || 0) + (feetToMetres(item.height) / 2)) + " " + feetToMetres(item.zPos || 0));
-                        $items[i * 2].setAttribute("color", item.lighting || "#FFF");
-                        $items[i * 2].setAttribute("src", "assets/uplighters.png");
-                        $items[i * 2].setAttribute("depth", "0.05");
-                        
-                        // chromabatten
-                        $items.push(document.createElement("a-entity"));
-                        $items[(i * 2) + 1].setAttribute("gltf-model", "#chromabatten");
-                        //$items[(i * 2) + 1].id = "chromabatten" + i;
-                        $items[(i * 2) + 1].setAttribute("position", ((i * 1.22) + startXPos) + " 0.68 " + (feetToMetres(item.zPos || 0) + 0.2));
+                if (vm.room === "Fleming" || vm.room === "Whittle") {
+                    (function () {
+                        var i,
+                            startXPos = (feetToMetres(item.width) / -2) + 0.61;
+                        for (i = 0; i < item.width / 4; i = i + 1) {
 
-                    }
-                }());
+                            // set panel
+                            $items.push(document.createElement("a-box"));
+                            $items[i * 2].setAttribute("width", 1.22);
+                            $items[i * 2].setAttribute("height", feetToMetres(item.height));
+                            $items[i * 2].setAttribute("position", ((i * 1.2205) + startXPos) + " " + (feetToMetres(item.yPos || 0) + (feetToMetres(item.height) / 2)) + " " + feetToMetres(item.zPos || 0));
+                            $items[i * 2].setAttribute("color", item.lighting || "#FFF");
+                            $items[i * 2].setAttribute("src", "assets/uplighters.png");
+                            $items[i * 2].setAttribute("depth", "0.05");
+
+                            // chromabatten
+                            $items.push(document.createElement("a-entity"));
+                            $items[(i * 2) + 1].setAttribute("gltf-model", "#chromabatten");
+                            //$items[(i * 2) + 1].id = "chromabatten" + i;
+                            $items[(i * 2) + 1].setAttribute("position", ((i * 1.22) + startXPos) + " 0.68 " + (feetToMetres(item.zPos || 0) + 0.2));
+
+                        }
+                    }());
+
+                } else if (vm.room === "Mountbatten") {
+
+                    $items.push(document.createElement("a-box"));
+                    $items.push(document.createElement("a-box"));
+                    $items.push(document.createElement("a-box"));
+                    $items[0].setAttribute("color", item.lighting || "#FFF");
+                    $items[1].setAttribute("color", item.lighting || "#FFF");
+                    $items[2].setAttribute("color", item.lighting || "#FFF");
+                    $items[0].setAttribute("width", "9.8");
+                    $items[1].setAttribute("width", "3.45");
+                    $items[2].setAttribute("width", "3.45");
+                    $items[0].setAttribute("height", "4.7");
+                    $items[1].setAttribute("height", "4.7");
+                    $items[2].setAttribute("height", "4.7");
+                    $items[0].setAttribute("depth", "0.05");
+                    $items[1].setAttribute("depth", "0.05");
+                    $items[2].setAttribute("depth", "0.05");
+                    $items[0].setAttribute("src", "assets/uplighters.png");
+                    $items[1].setAttribute("src", "assets/uplighters.png");
+                    $items[2].setAttribute("src", "assets/uplighters.png");
+                    $items[0].setAttribute("position", "0 2.3 -1");
+                    $items[1].setAttribute("position", "-5.55 2.3 0");
+                    $items[2].setAttribute("position", "5.55 2.3 0");
+                    $items[1].setAttribute("rotation", "0 60 0");
+                    $items[2].setAttribute("rotation", "0 -60 0");
+                    
+                }
 
             } else if (item.type === "screen") {
                 $items.push(document.createElement("a-box"));
                 $items[0].setAttribute("width", feetToMetres(item.width));
                 $items[0].setAttribute("height", feetToMetres(item.height));
-                $items[0].setAttribute("position", "0 " + (feetToMetres(item.yPos || 0) + (feetToMetres(item.height) / 2)) + " " + feetToMetres(item.zPos || 0));
+                $items[0].setAttribute("position", "0 " + (vm.room === "Mountbatten" ? 3.4 : feetToMetres(item.yPos || 0) + (feetToMetres(item.height) / 2)) + " " + feetToMetres(item.zPos || 0));
                 $items[0].setAttribute("color", "#FFF");
                 $items[0].setAttribute("depth", "0.05");
 
-                if (item.surround) {
+                if (item.surround && (vm.room === "Fleming" || vm.room === "Whittle")) {
                     $items.push(document.createElement("a-box"));
                     $items[1] = document.createElement("a-box");
                     $items[1].setAttribute("color", "#000");
@@ -176,19 +208,31 @@ var render;
                     CHAIR_WIDTH = 0.55,
                     CHAIR_DEPTH = 1.2,
                     frontRow = 2.5,
-                    chairsPerRow = (vm.room === "Fleming" ? 18 : 13), // 14 per row for Whittle
+                    maxChairs,
+                    chairsPerRow,
                     chairIndex = 0,
                     row = 1,
                     side = "left",
                     $chairsContainer = document.querySelector("#chairs"),
                     chairs;
                 
+                // determine number of chairs based on room
+                if (vm.room === "Fleming") {
+                    chairsPerRow = 18;
+                    maxChairs = 12 * 18;
+                } else if (vm.room === "Whittle") {
+                    chairsPerRow = 13;
+                    maxChairs = 20 * 13;
+                } else if (vm.room === "Mountbatten") {
+                    chairsPerRow = 10;
+                    maxChairs = 12 * 10;
+                }
+                
                 chairs = (function () {
-                    var MAX_CHAIRS = (vm.room === "Fleming" ? 12 * 18 : 20 * 13),
-                        chairArray = [],
+                    var chairArray = [],
                         i,
                         rnd;
-                    for (i = 0; i < MAX_CHAIRS; i = i + 1) {
+                    for (i = 0; i < maxChairs; i = i + 1) {
                         rnd = Math.random();
                         if (rnd < 0.15 && chairArray[chairArray.length - 1] !== "pink" && chairArray[chairArray.length - 2] !== "pink") {
                             chairArray.push("pink");
