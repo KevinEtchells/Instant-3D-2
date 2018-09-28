@@ -88,9 +88,9 @@ var render;
                     $items.push(document.createElement("a-box"));
                     $items.push(document.createElement("a-box"));
                     $items.push(document.createElement("a-box"));
-                    $items[0].setAttribute("color", item.lighting || "#FFF");
-                    $items[1].setAttribute("color", item.lighting || "#FFF");
-                    $items[2].setAttribute("color", item.lighting || "#FFF");
+                    $items[0].setAttribute("color", vm.roomsData.mountbatten.setWashCentre);
+                    $items[1].setAttribute("color", vm.roomsData.mountbatten.setWashSame ? vm.roomsData.mountbatten.setWashCentre : vm.roomsData.mountbatten.setWashSides);
+                    $items[2].setAttribute("color", vm.roomsData.mountbatten.setWashSame ? vm.roomsData.mountbatten.setWashCentre : vm.roomsData.mountbatten.setWashSides);
                     $items[0].setAttribute("width", "9.8");
                     $items[1].setAttribute("width", "3.45");
                     $items[2].setAttribute("width", "3.45");
@@ -192,11 +192,13 @@ var render;
         });
         
         // update set wash colour
-        vm.items.forEach(function (item) {
-            if (item.type === "set") {
-                document.querySelector("#set-wash").value = item.lighting;
-            }
-        });
+        if (vm.room === "Fleming" || vm.room === "Whittle") {
+            vm.items.forEach(function (item) {
+                if (item.type === "set") {
+                    document.querySelector("#set-wash").value = item.lighting;
+                }
+            });
+        }
         
         
         if (renderRoom) {

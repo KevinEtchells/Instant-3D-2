@@ -18,6 +18,13 @@ var vm;
 
         data: {
             room: "Mountbatten",
+            roomsData: {
+                mountbatten: {
+                    setWashCentre: "#0b63f4",
+                    setWashSides: "#0b63f4",
+                    setWashSame: true
+                }
+            },
             width: 40,
             items: [
                 {type: "stage", width: 40, height: 2, depth: 8},
