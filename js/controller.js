@@ -17,9 +17,9 @@ var vm;
         el: "#app",
 
         data: {
-            room: "Mountbatten",
+            room: "Churchill",
             roomsData: {
-                mountbatten: {
+                mountbatten: { // We are also using this for the Churchill
                     setWashCentre: "#0b63f4",
                     setWashSides: "#0b63f4",
                     setWashSame: true

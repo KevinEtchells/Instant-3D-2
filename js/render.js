@@ -31,7 +31,11 @@ var render;
         }
         
         if (renderRoom) {
-            if (vm.room === "Fleming") {
+            if (vm.room === "Churchill") {
+                $room.setAttribute("gltf-model", "#churchill");
+                $room.setAttribute("rotation", "0 0 0");
+                $room.setAttribute("position", "0 0 0.3");
+            } else if (vm.room === "Fleming") {
                 $room.setAttribute("gltf-model", "#fleming-whittle");
                 $room.setAttribute("rotation", "0 0 0");
                 $room.setAttribute("position", "0 0 7");
@@ -41,6 +45,7 @@ var render;
                 $room.setAttribute("position", "29.4 0 8");
             } else if (vm.room === "Mountbatten") {
                 $room.setAttribute("gltf-model", "#mountbatten");
+                $room.setAttribute("rotation", "0 0 0");
                 $room.setAttribute("position", "-31.8 0 0.7");
             }
         }
@@ -59,7 +64,34 @@ var render;
                 
             } else if (item.type === "set") {
                 
-                if (vm.room === "Fleming" || vm.room === "Whittle") {
+                if (vm.room === "Churchill") {
+                    
+                    // TO DO: adjust width/height of flats
+                    $items.push(document.createElement("a-box"));
+                    $items.push(document.createElement("a-box"));
+                    $items.push(document.createElement("a-box"));
+                    $items[0].setAttribute("color", vm.roomsData.mountbatten.setWashCentre);
+                    $items[1].setAttribute("color", vm.roomsData.mountbatten.setWashSame ? vm.roomsData.mountbatten.setWashCentre : vm.roomsData.mountbatten.setWashSides);
+                    $items[2].setAttribute("color", vm.roomsData.mountbatten.setWashSame ? vm.roomsData.mountbatten.setWashCentre : vm.roomsData.mountbatten.setWashSides);
+                    $items[0].setAttribute("width", "6.1");
+                    $items[1].setAttribute("width", "8.5");
+                    $items[2].setAttribute("width", "8.5");
+                    $items[0].setAttribute("height", "4.57");
+                    $items[1].setAttribute("height", "4.57");
+                    $items[2].setAttribute("height", "4.57");
+                    $items[0].setAttribute("depth", "0.05");
+                    $items[1].setAttribute("depth", "0.05");
+                    $items[2].setAttribute("depth", "0.05");
+                    $items[0].setAttribute("src", "assets/uplighters.png");
+                    $items[1].setAttribute("src", "assets/uplighters.png");
+                    $items[2].setAttribute("src", "assets/uplighters.png");
+                    $items[0].setAttribute("position", "0 3 -4.5");
+                    $items[1].setAttribute("position", "-6 3 -1.7");
+                    $items[2].setAttribute("position", "6 3 -1.7");
+                    $items[1].setAttribute("rotation", "0 41.5 0");
+                    $items[2].setAttribute("rotation", "0 -41.5 0");
+                    
+                } else if (vm.room === "Fleming" || vm.room === "Whittle") {
                     (function () {
                         var i,
                             startXPos = (feetToMetres(item.width) / -2) + 0.61;
@@ -113,9 +145,17 @@ var render;
 
             } else if (item.type === "screen") {
                 $items.push(document.createElement("a-box"));
-                $items[0].setAttribute("width", feetToMetres(item.width));
-                $items[0].setAttribute("height", feetToMetres(item.height));
-                $items[0].setAttribute("position", "0 " + (vm.room === "Mountbatten" ? 3.4 : feetToMetres(item.yPos || 0) + (feetToMetres(item.height) / 2)) + " " + feetToMetres(item.zPos || 0));
+                
+                if (vm.room === "Churchill") {
+                    $items[0].setAttribute("width", "5.8");
+                    $items[0].setAttribute("height", "3.26");
+                    $items[0].setAttribute("position", "0 4 -3.9");    
+                } else {
+                    $items[0].setAttribute("width", feetToMetres(item.width));
+                    $items[0].setAttribute("height", feetToMetres(item.height));
+                    $items[0].setAttribute("position", "0 " + (vm.room === "Mountbatten" ? 3.4 : feetToMetres(item.yPos || 0) + (feetToMetres(item.height) / 2)) + " " + feetToMetres(item.zPos || 0));    
+                }
+                
                 $items[0].setAttribute("color", "#FFF");
                 $items[0].setAttribute("depth", "0.05");
 
@@ -138,10 +178,26 @@ var render;
                 $items[0].setAttribute("position", (item.xPos || 0) + " " + (item.yPos || 0) + " " + ((item.zPos || 0) + 0.02));
                 $items[0].setAttribute("src", "user-content/" + item.src);
                 
+                if (vm.room === "Churchill") {
+                    if (item.xPos > 3) {
+                        $items[0].setAttribute("rotation", "0 -41.5 0");
+                    } else if (item.xPos < -3) {
+                        $items[0].setAttribute("rotation", "0 41.5 0");
+                    } else {
+                        $items[0].setAttribute("rotation", "0 0 0");
+                    }
+                }
+                
             } else if (item.type === "lectern") {
+                
+                let yPos = item.yPos || 0;
+                if (vm.room === "Churchill") {
+                    yPos = yPos + 0.11;
+                }
+                
                 $items.push(document.createElement("a-entity"));
                 $items[0].setAttribute("id", item.id);
-                $items[0].setAttribute("position", (item.xPos || 0) + " " + (item.yPos || 0) + " " + (item.zPos || 0));
+                $items[0].setAttribute("position", (item.xPos || 0) + " " + yPos + " " + (item.zPos || 0));
                 $items[0].setAttribute("rotation", "0 -15 0");
                 (function () {
                     var $el1 = document.createElement("a-entity"),
@@ -169,9 +225,15 @@ var render;
                 }());
 
             } else if (item.type === "top-table") {
+                
+                let yPos = item.yPos || 0;
+                if (vm.room === "Churchill") {
+                    yPos = yPos + 0.12;
+                }
+                
                 $items.push(document.createElement("a-entity"));
                 $items[0].setAttribute("id", item.id);
-                $items[0].setAttribute("position", (item.xPos || 0) + " " + (item.yPos || 0) + " " + (item.zPos || 0));
+                $items[0].setAttribute("position", (item.xPos || 0) + " " + yPos + " " + (item.zPos || 0));
                 (function () {
                     var i,
                         $el;
@@ -219,7 +281,10 @@ var render;
                     chairs;
                 
                 // determine number of chairs based on room
-                if (vm.room === "Fleming") {
+                if (vm.room === "Churchill") {
+                    chairsPerRow = 12;
+                    maxChairs = 20 * 12;
+                } else if (vm.room === "Fleming") {
                     chairsPerRow = 18;
                     maxChairs = 12 * 18;
                 } else if (vm.room === "Whittle") {

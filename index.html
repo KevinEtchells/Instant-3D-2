@@ -26,6 +26,7 @@
             <label>
                 <span>Room: </span>
                 <select v-model="room" v-on:change="update(null, true)">
+                    <option>Churchill</option>
                     <option>Fleming</option>
                     <option>Whittle</option>
                     <option>Mountbatten</option>
@@ -43,7 +44,7 @@
                 <span>Screenshot: </span>Ctrl + Alt + S
             </label>
             <hr/>
-            <template v-if="room === 'Mountbatten'">
+            <template v-if="room === 'Mountbatten' || room === 'Churchill'">
                 <h3>Set Wash</h3>
                 <label>
                     <span>Centre:</span>
@@ -85,6 +86,7 @@
             <a-scene background="color: black">
                 
                 <a-assets>
+                    <a-asset-item id="churchill" src="assets/rooms/Churchill.glb"></a-asset-item>
                     <a-asset-item id="fleming-whittle" src="assets/rooms/Fleming-Whittle.glb"></a-asset-item>
                     <a-asset-item id="mountbatten" src="assets/rooms/Mountbatten.glb"></a-asset-item>
                     <a-asset-item id="felt-lectern-external" src="assets/felt-lectern-external.obj"></a-asset-item>
