@@ -69,10 +69,10 @@
             <hr/>
             <h3>Furniture</h3>
             <ul>
-                <li v-for="item in items" v-if="item.type === 'lectern' || item.type === 'top-table'">
+                <li v-for="item in items" v-if="item.type === 'lectern' || item.type === 'top-table' || item.type === 'bucket-chairs'">
                     <h4><input type="checkbox" v-model="item.selected" v-on:click="selectItem(item)"/> {{item.type}}</h4>
                     <label v-if="item.type === 'lectern'"><span>Colour: </span><input type="color" v-model="item.colour" v-on:change="update()"/></label>
-                    <label v-if="item.type === 'top-table'"><span>Size: </span><input type="number" v-model="item.size" v-on:change="update()"/></label>
+                    <label v-if="item.type === 'top-table' || item.type === 'bucket-chairs'"><span>Size: </span><input type="number" v-model="item.size" v-on:change="update()"/></label>
                 </li>
             </ul>
             <hr/>
@@ -92,6 +92,7 @@
                     <a-asset-item id="felt-lectern-external" src="assets/felt-lectern-external.obj"></a-asset-item>
                     <a-asset-item id="felt-lectern-internal" src="assets/felt-lectern-internal.obj"></a-asset-item>
                     <a-asset-item id="tt-gltf" src="assets/top-table.glb"></a-asset-item>
+                    <a-asset-item id="bucket-chair" src="assets/bucket-chair.glb"></a-asset-item>
                     <a-asset-item id="chromabatten" src="assets/chromabatten.glb"></a-asset-item>
                     <a-asset-item id="chair-purple-obj" src="assets/chair-purple.obj"></a-asset-item>
                     <a-asset-item id="chair-purple-mtl" src="assets/chair-purple.mtl"></a-asset-item>

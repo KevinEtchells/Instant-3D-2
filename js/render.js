@@ -254,6 +254,46 @@ var render;
                     }
                 }());
                 
+            } else if (item.type === "bucket-chairs") {
+                
+                let yPos = item.yPos || 0;
+                if (vm.room === "Churchill") {
+                    yPos = yPos + 0.12;
+                }
+                
+                $items.push(document.createElement("a-entity"));
+                $items[0].setAttribute("id", item.id);
+                $items[0].setAttribute("position", (item.xPos || 0) + " " + yPos + " " + (item.zPos || 0));
+                (function () {
+                    
+                    var i,
+                        $el;
+                    
+                    // Get chair rotations
+                    let middle = Math.round(item.size / 2) - 1;
+                    let rotations = [];
+                    let amount = 0;
+                    // first half:
+                    for (i = middle; i >= 0; i--) {
+                        rotations[i] = amount;
+                        amount = amount + 10;
+                    }
+                    // second half:
+                    amount =  item.size % 2 ? -10 : 0;
+                    for (i = middle + 1; i <= item.size; i++) {
+                        rotations[i] = amount;
+                        amount = amount - 10;
+                    }
+                          
+                    for (i = 0; i < item.size; i = i + 1) {
+                        $el = document.createElement("a-entity");
+                        $el.setAttribute("gltf-model", "#bucket-chair");
+                        $el.setAttribute("position", ((i + 1) * 0.8) +  " 0 " + (Math.pow(Math.abs(rotations[i]), 1.7) * 0.002)); // the Y position isn't linear relative to rotation
+                        $el.setAttribute("rotation", "0 " + rotations[i] + " 0");   
+                        $items[0].appendChild($el);
+                    }
+                }());
+                
             }
 
             $items.forEach(function ($item) {
