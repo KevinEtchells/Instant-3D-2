@@ -170,6 +170,7 @@ var render;
                 }
 
             } else if (item.type === "graphic") {
+
                 $items.push(document.createElement("a-image"));
                 $items[0].setAttribute("id", item.id);
                 $items[0].setAttribute("opacity", "0.8");
@@ -183,6 +184,14 @@ var render;
                         $items[0].setAttribute("rotation", "0 -41.5 0");
                     } else if (item.xPos < -3) {
                         $items[0].setAttribute("rotation", "0 41.5 0");
+                    } else {
+                        $items[0].setAttribute("rotation", "0 0 0");
+                    }
+                } else if (vm.room === "Mountbatten") {
+                    if (item.xPos > 4.9) {
+                        $items[0].setAttribute("rotation", "0 -60 0");
+                    } else if (item.xPos < -4.9) {
+                        $items[0].setAttribute("rotation", "0 60 0");
                     } else {
                         $items[0].setAttribute("rotation", "0 0 0");
                     }
