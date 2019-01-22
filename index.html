@@ -7,119 +7,196 @@
         <script src="js/libs/vue.min.js"></script>
         <script src="js/libs/FileSaver.min.js" defer></script>
         <style>
-            body {color: white; font-family: Arial, sans-serif;}
-            #app {background-color: rgba(0, 0, 0, 0.7); height: 100vh; left: 0; overflow-y: auto; padding: 5px; position: absolute; top: 0; width: 300px; z-index: 10;}
-            h2 {margin: 5px 0;}
+            body {background-color: black; color: white; display: flex; flex-direction: column; font-family: Arial, sans-serif; font-size: 10pt; margin: 0; overflow: hidden;}
+            a-scene {height: calc(100vh - 200px); width: 100vw;}
+            #app {display: flex; height: 190px; justify-content: space-between; padding: 5px;}
+        #app > div {border: 1px solid grey; padding: 5px; /*width: calc(25vw - 17.5px);*/}
+            h2 {font-size: 1.1em; margin: 0 0 5px 0;}
             ul {list-style-type: none; padding-left: 0;}
             li {border-bottom: 1px solid #555; margin-bottom: 10px; padding-bottom: 10px;}
-            label {display: block; height: 40px;}
+            label {display: block; height: 40px; font-size: 0.9em; margin-top: 5px;}
             label > label {display: inline-block;}
             label span {font-weight: bold;}
-            select, button {padding: 5px;}
+            thead {font-size: 0.8em;}
+            td {text-align: center;}
+            select, button {font-size: 0.8em; padding: 5px;}
+            td input[type='number'], td input[type='text'] {padding: 3px;}
+            input[type='number'] {width: 40px;}
             input[type='file'] {width: 180px;}
         </style>
     </head>
     <body>
-        
+
+        <a-scene background="color: black" embedded>
+
+            <a-assets>
+                <a-asset-item id="churchill" src="assets/rooms/Churchill.glb"></a-asset-item>
+                <a-asset-item id="fleming-whittle" src="assets/rooms/Fleming-Whittle.glb"></a-asset-item>
+                <a-asset-item id="mountbatten" src="assets/rooms/Mountbatten.glb"></a-asset-item>
+                <a-asset-item id="felt-lectern-external" src="assets/felt-lectern-external.obj"></a-asset-item>
+                <a-asset-item id="felt-lectern-internal" src="assets/felt-lectern-internal.obj"></a-asset-item>
+                <a-asset-item id="tt-gltf" src="assets/top-table.glb"></a-asset-item>
+                <a-asset-item id="bucket-chair" src="assets/bucket-chair.glb"></a-asset-item>
+                <a-asset-item id="chromabatten" src="assets/chromabatten.glb"></a-asset-item>
+                <a-asset-item id="chair-purple-obj" src="assets/chair-purple.obj"></a-asset-item>
+                <a-asset-item id="chair-purple-mtl" src="assets/chair-purple.mtl"></a-asset-item>
+                <a-asset-item id="chair-pink-obj" src="assets/chair-pink.obj"></a-asset-item>
+                <a-asset-item id="chair-pink-mtl" src="assets/chair-pink.mtl"></a-asset-item>
+            </a-assets>
+
+            <a-entity id="room"></a-entity>
+
+            <a-entity id="content"></a-entity>
+
+            <a-entity id="chairs"></a-entity>
+
+            <a-entity light="type:ambient;intensity:0.1"></a-entity>
+            <a-entity light="intensity:0.8" position="-0.5 2.1 6.3" rotation="19 0 0"></a-entity>
+
+            <a-entity position="0 1.7 15">
+                <a-camera></a-camera>
+            </a-entity>
+
+        </a-scene>
+
         <div id="app">
-            <!--<h2>Options</h2>-->
-            <label>
-                <span>Room: </span>
+
+            <div>
+                <h2>ROOM:</h2>
                 <select v-model="room" v-on:change="update(null, true)">
                     <option>Churchill</option>
                     <option>Fleming</option>
                     <option>Whittle</option>
                     <option>Mountbatten</option>
                 </select>
-            </label>
-            <label v-if="room === 'Fleming' || room === 'Whittle'">
-                <span>Stage Width:</span>
-                <input type="range" step="4" min="20" max="80" v-on:change="updateWidth" v-model="width"/> {{width}}ft
-            </label>
-            <label v-if="room === 'Fleming' || room === 'Whittle'">
-                <span>Set Wash: </span>
-                <input id="set-wash" type="color" value="#0b63f4" v-on:change="updateSetWash($event)"/>
-            </label>
-            <label>
-                <span>Screenshot: </span>Ctrl + Alt + S
-            </label>
-            <hr/>
-            <template v-if="room === 'Mountbatten' || room === 'Churchill'">
-                <h3>Set Wash</h3>
                 <label>
-                    <span>Centre:</span>
-                    <input type="color" v-model="roomsData.mountbatten.setWashCentre" v-on:change="update()"/>
+                    <span>Seating Style: </span>
+                    <select>
+                        <option>Theatre</option>
+                    </select>
                 </label>
+            </div>
+
+            <div>
+                <h2>STAGE / SET:</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>&#10000;</th>
+                            <th>Type</th>
+                            <th>Width</th>
+                            <th>Colour</th>
+                            <th>Options</th>
+                            <th>&#10006;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="room === 'Churchill' || room === 'Mountbatten'">
+                            <td></td>
+                            <td>Set - Centre</td>
+                            <td>N/A</td>
+                            <td><input type="color" v-model="roomsData.fixedSet.setWashCentre" v-on:change="update()"/></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr v-if="room === 'Churchill' || room === 'Mountbatten'">
+                            <td></td>
+                            <td>Set - Sides</td>
+                            <td>N/A</td>
+                            <td><input v-if="!roomsData.fixedSet.setWashSame" type="color" v-model="roomsData.fixedSet.setWashSides" v-on:change="update()"/></td>
+                            <td>Linked: <input type="checkbox" v-model="roomsData.fixedSet.setWashSame" v-on:change="update()"/></td>
+                            <td></td>
+                        </tr>
+                        </tr>
+                        <tr v-for="item in items" v-if="(room === 'Fleming' || room === 'Whittle') && (item.type === 'stage' || item.type === 'set')">
+                            <td><!--<input type="checkbox" v-model="item.selected" v-on:click="selectItem(item)"/>--></td>
+                            <td>
+                                <select v-model="item.type">
+                                    <option value="stage">Stage</option>
+                                    <option value="set">Set</option>
+                                </select>
+                            </td>
+                            <td><input type="number" v-model="item.width" step="4" v-on:change="update()"/> ft</template></td>
+                            <td><input v-if="item.type === 'set'" type="color" v-model="item.lighting" v-on:change="update()"/><span v-else>N/A</span></td>
+                            <td></td>
+                            <td><!--<button v-on:click="removeItem(item.id)">&#10006;</button>--></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h2>GRAPHICS:</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>&#10000;</th>
+                            <th>Path</th>
+                            <th>Width</th>
+                            <th>&#10006;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in items" v-if="item.type === 'graphic'">
+                            <td><input type="checkbox" v-model="item.selected" v-on:click="selectItem(item)"/></td>
+                            <td><input type="text" v-model="item.src" v-on:change="newGraphic(item)"/></td>
+                            <td><input type="number" min="0.5" max="10" step="0.1" v-model:number="item.width" v-on:change="update()"/> m</td>
+                            <td><button v-on:click="removeItem(item.id)">&#10006;</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button v-on:click="addItem('graphic')">Add Graphic</button>
+            </div>
+
+            <div>
+                <h2>STAGE FURNITURE:</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>&#10000;</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>Colour</th>
+                            <th>Options</th>
+                            <th>&#10006;</th>
+                        <tr/>
+                    <thead>
+                    <tbody>
+                        <tr v-for="item in items" v-if="item.type === 'lectern' || item.type === 'top-table' || item.type === 'bucket-chairs'">
+                            <td><input type="checkbox" v-model="item.selected" v-on:click="selectItem(item)"/></td>
+                            <td>
+                                <select v-model="item.type" v-on:change="update()">
+                                    <option value="lectern">Felt Lectern</option>
+                                    <option value="top-table">Top Table</option>
+                                    <option value="bucket-chairs">Bucket Chairs</option>
+                                </select>
+                            </td>
+                            <td><input v-if="item.type === 'top-table' || item.type === 'bucket-chairs'" type="number" v-model="item.size" v-on:change="update()"/><span v-else>N/A</span></td>
+                            <td><input v-if="item.type === 'lectern' || item.type === 'top-table' && item.modpanel" type="color" v-model="item.colour" v-on:change="update()"/><span v-else>N/A</span></td>
+                            <td></td>
+                            <td><button v-on:click="removeItem(item.id)">&#10006;</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button v-on:click="addItem('lectern')">Add Item</button>
+            </div>
+
+            <div>
+                <h2>FILE:</h2>
                 <label>
-                    <span>Sides:</span>
-                    <label><input type="checkbox" v-model="roomsData.mountbatten.setWashSame" v-on:change="update()"/> Same as centre</label>
-                    <input v-if="!roomsData.mountbatten.setWashSame" type="color" v-model="roomsData.mountbatten.setWashSides" v-on:change="update()"/>
+                    <span>Open File: </span>
+                    <input type="file" v-on:change="openFile($event)"/>
                 </label>
-                <hr/>
-            </template>
-            <h3>Graphics:</h3>
-            <ul>
-                <li v-for="item in items" v-if="item.type === 'graphic'">
-                    <label><input type="checkbox" v-model="item.selected" v-on:click="selectItem(item)"/> <span>Path: </span><input v-model="item.src" v-on:change="newGraphic(item)"/></label>
-                    <label><span>Width: </span><input type="range" min="0.5" max="10" step="0.1" v-model:number="item.width" v-on:change="update()"/></label>
-                    <button v-on:click="removeItem(item)">Remove</button>
-                </li>
-            </ul>
-            <button v-on:click="addItem('graphic')">Add Graphic</button>
-            <hr/>
-            <h3>Furniture</h3>
-            <ul>
-                <li v-for="item in items" v-if="item.type === 'lectern' || item.type === 'top-table' || item.type === 'bucket-chairs'">
-                    <h4><input type="checkbox" v-model="item.selected" v-on:click="selectItem(item)"/> {{item.type}}</h4>
-                    <label v-if="item.type === 'lectern'"><span>Colour: </span><input type="color" v-model="item.colour" v-on:change="update()"/></label>
-                    <label v-if="item.type === 'top-table' || item.type === 'bucket-chairs'"><span>Size: </span><input type="number" v-model="item.size" v-on:change="update()"/></label>
-                </li>
-            </ul>
-            <hr/>
-            <label>
-                <span>Open File: </span>
-                <input type="file" v-on:change="openFile($event)"/>
-            </label>
-            <button v-on:click="saveFile()">Save to File</button>
+                <button v-on:click="saveFile()">Save to File</button>
+                <label>
+                    <span>Screenshot: </span>Ctrl + Alt + S
+                </label>
+            </div>
+
         </div>
-
-            <a-scene background="color: black">
-                
-                <a-assets>
-                    <a-asset-item id="churchill" src="assets/rooms/Churchill.glb"></a-asset-item>
-                    <a-asset-item id="fleming-whittle" src="assets/rooms/Fleming-Whittle.glb"></a-asset-item>
-                    <a-asset-item id="mountbatten" src="assets/rooms/Mountbatten.glb"></a-asset-item>
-                    <a-asset-item id="felt-lectern-external" src="assets/felt-lectern-external.obj"></a-asset-item>
-                    <a-asset-item id="felt-lectern-internal" src="assets/felt-lectern-internal.obj"></a-asset-item>
-                    <a-asset-item id="tt-gltf" src="assets/top-table.glb"></a-asset-item>
-                    <a-asset-item id="bucket-chair" src="assets/bucket-chair.glb"></a-asset-item>
-                    <a-asset-item id="chromabatten" src="assets/chromabatten.glb"></a-asset-item>
-                    <a-asset-item id="chair-purple-obj" src="assets/chair-purple.obj"></a-asset-item>
-                    <a-asset-item id="chair-purple-mtl" src="assets/chair-purple.mtl"></a-asset-item>
-                    <a-asset-item id="chair-pink-obj" src="assets/chair-pink.obj"></a-asset-item>
-                    <a-asset-item id="chair-pink-mtl" src="assets/chair-pink.mtl"></a-asset-item>                    
-                </a-assets>
-                
-                <a-entity id="room"></a-entity>
-                
-                <a-entity id="content"></a-entity>
-                
-                <a-entity id="chairs"></a-entity>
-
-                <!-- floor -->
-                <!--<a-plane color="#222" width="200" height="100" position="0 -6 -10" rotation="-90 0 0"></a-plane>-->
-                
-                <a-entity light="type:ambient;intensity:0.1"></a-entity>
-                <a-entity light="intensity:0.8" position="-0.5 2.1 6.3" rotation="19 0 0"></a-entity>
-                
-                <a-entity position="0 1.7 15">
-                    <a-camera></a-camera>
-                </a-entity>
-
-            </a-scene>
 
         <script src="js/render.js"></script>
         <script src="js/controller.js"></script>
-      
+
     </body>
 </html>

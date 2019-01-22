@@ -17,9 +17,9 @@ var vm;
         el: "#app",
 
         data: {
-            room: "Churchill",
+            room: "Whittle",
             roomsData: {
-                mountbatten: { // We are also using this for the Churchill
+                fixedSet: { // Mountbatten & Churchill
                     setWashCentre: "#0b63f4",
                     setWashSides: "#0b63f4",
                     setWashSame: true
@@ -27,21 +27,20 @@ var vm;
             },
             width: 40,
             items: [
-                {type: "stage", width: 40, height: 2, depth: 8},
-                {type: "set", width: 40, height: 11, yPos: 2, zPos: -4, lighting: "#0b63f4"},
-                {type: "screen", width: 14, height: 8, yPos: 6, zPos: -3, surround: 0.2},
-                {type: "lectern", colour: "#0b63f4", id: "lec1", xPos: 4, yPos: -0.73, zPos: 2.1},
-                {type: "top-table", id: "tt1", size: 2, xPos: -5, yPos: 0.68, zPos: 0.7},
-                {type: "bucket-chairs", id: "bucket-chairs1", size: 0, xPos: -5, yPos: 0.68, zPos: 0.7}
+                {type: "stage", width: 40, height: 2, depth: 8, id: "01"},
+                {type: "set", width: 40, height: 11, yPos: 2, zPos: -4, lighting: "#0b63f4", id: "02"},
+                {type: "screen", width: 14, height: 8, yPos: 6, zPos: -3, surround: 0.2, id: "03"},
+                {type: "lectern", colour: "#0b63f4", id: "lec1", xPos: 4, yPos: -0.73, zPos: 2.1, id: "04"},
+                {type: "top-table", id: "tt1", size: 2, xPos: -5, yPos: 0.68, zPos: 0.7, id: "05"}
             ]
         },
-        
+
         methods: {
-            
+
             update: function (item, renderRoom) {
                 render(item, renderRoom);
             },
-            
+
             updateWidth: function (event) {
                 var data = this;
                 this.items.forEach(function (item) {
@@ -51,7 +50,7 @@ var vm;
                 });
                 render();
             },
-          
+
             updateSetWash: function (event) {
                 this.items.forEach(function (item) {
                     if (item.type === "set") {
@@ -69,7 +68,7 @@ var vm;
                 };
                 img.src = "user-content/" + item.src;
             },
-            
+
             addItem: function (type) {
                 this.items.push({
                     id: "item" + Date.now(),
@@ -80,7 +79,7 @@ var vm;
                     zPos: -1.19
                 });
             },
-            
+
             removeItem: function (id) {
                 var foundIndex = -1;
                 this.items.forEach(function (item, itemIndex) {
@@ -91,8 +90,9 @@ var vm;
                 if (foundIndex !== -1) {
                     this.items.splice(foundIndex, 1);
                 }
+                render();
             },
-            
+
             selectItem: function (clickedItem) {
                 var self = this;
                 // if selected, unselect all other items
@@ -106,7 +106,7 @@ var vm;
                     }
                 });
             },
-            
+
             openFile: function (event) {
                 var reader = new FileReader(),
                     self = this;
@@ -128,9 +128,9 @@ var vm;
                 var blob = new Blob([JSON.stringify(this.$data)], {type: "text/plain;charset=utf-8"});
                 saveAs(blob, "visual.json");
             }
-            
+
         },
-        
+
         created: function () {
             window.setTimeout(function () {
                 render(null, true);
@@ -169,5 +169,5 @@ var vm;
         });
 
     };
-    
+
 }());
