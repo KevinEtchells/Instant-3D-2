@@ -71,7 +71,8 @@
                 </select>
                 <label>
                     <span>Seating Style: </span>
-                    <select>
+                    <select v-model="seatingStyle" v-on:change="update(null, true)">
+                        <option>None</option>
                         <option>Theatre</option>
                     </select>
                 </label>
@@ -109,7 +110,7 @@
                         </tr>
                         </tr>
                         <tr v-for="item in items" v-if="(room === 'Fleming' || room === 'Whittle') && (item.type === 'stage' || item.type === 'set')">
-                            <td><!--<input type="checkbox" v-model="item.selected" v-on:click="selectItem(item)"/>--></td>
+                            <td><input type="checkbox" v-model="item.selected" v-on:click="selectItem(item)"/></td>
                             <td>
                                 <select v-model="item.type">
                                     <option value="stage">Stage</option>
@@ -119,10 +120,11 @@
                             <td><input type="number" v-model="item.width" step="4" v-on:change="update()"/> ft</template></td>
                             <td><input v-if="item.type === 'set'" type="color" v-model="item.lighting" v-on:change="update()"/><span v-else>N/A</span></td>
                             <td></td>
-                            <td><!--<button v-on:click="removeItem(item.id)">&#10006;</button>--></td>
+                            <td><button v-on:click="removeItem(item.id)">&#10006;</button></td>
                         </tr>
                     </tbody>
                 </table>
+                <button v-on:click="addItem('stage', 20, 0, 0, 0)">Add Item</button>
             </div>
 
             <div>

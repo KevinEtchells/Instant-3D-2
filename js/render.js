@@ -56,9 +56,10 @@ var render;
 
             if (item.type === "stage" && (vm.room === "Fleming" || vm.room === "Whittle")) {
                 $items.push(document.createElement("a-box"));
+                $items[0].setAttribute("id", item.id);
                 $items[0].setAttribute("width", feetToMetres(item.width));
                 $items[0].setAttribute("height", feetToMetres(item.height));
-                $items[0].setAttribute("position", "0 " + (feetToMetres(item.yPos || 0) + (feetToMetres(item.height) / 2)) + " " + feetToMetres(item.zPos || 0));
+                $items[0].setAttribute("position", feetToMetres(item.xPos || 0) + " " + (feetToMetres(item.yPos || 0) + (feetToMetres(item.height) / 2)) + " " + feetToMetres(item.zPos || 0));
                 $items[0].setAttribute("color", "#111");
                 $items[0].setAttribute("depth", feetToMetres(item.depth));
 
@@ -305,84 +306,104 @@ var render;
         if (renderRoom) {
 
             // audience chairs
-            (function () {
+             if (vm.seatingStyle === "Theatre") {
 
-                var AISLE_WIDTH = 2.5,
-                    CHAIR_WIDTH = 0.55,
-                    CHAIR_DEPTH = 1.2,
-                    frontRow = 2.5,
-                    maxChairs,
-                    chairsPerRow,
-                    chairIndex = 0,
-                    row = 1,
-                    side = "left",
-                    $chairsContainer = document.querySelector("#chairs"),
-                    chairs;
+                (function () {
 
-                // determine number of chairs based on room
-                if (vm.room === "Churchill") {
-                    chairsPerRow = 12;
-                    maxChairs = 20 * 12;
-                } else if (vm.room === "Fleming") {
-                    chairsPerRow = 18;
-                    maxChairs = 12 * 18;
-                } else if (vm.room === "Whittle") {
-                    chairsPerRow = 13;
-                    maxChairs = 20 * 13;
-                } else if (vm.room === "Mountbatten") {
-                    chairsPerRow = 10;
-                    maxChairs = 12 * 10;
-                }
+                    var AISLE_WIDTH = 2.5,
+                        CHAIR_WIDTH = 0.55,
+                        CHAIR_DEPTH = 1.2,
+                        frontRow = (function () {
+                            let furthestPos = 2.4
+                            if (vm.room === "Fleming" || vm.room === "Whittle") {
+                                // check each stage position
+                                vm.items.forEach(function (item) {
+                                    if (item.type === "stage") {
+                                        const newPos = feetToMetres(item.depth) + feetToMetres(item.zPos) - 0.2;
+                                        if (furthestPos < newPos) {
+                                            furthestPos = newPos;
+                                        }
+                                    }
+                                });
+                            }
+                            return furthestPos;
+                        }()),
+                        maxChairs,
+                        chairsPerRow,
+                        chairIndex = 0,
+                        row = 1,
+                        side = "left",
+                        $chairsContainer = document.querySelector("#chairs"),
+                        chairs;
 
-                chairs = (function () {
-                    var chairArray = [],
-                        i,
-                        rnd;
-                    for (i = 0; i < maxChairs; i = i + 1) {
-                        rnd = Math.random();
-                        if (rnd < 0.15 && chairArray[chairArray.length - 1] !== "pink" && chairArray[chairArray.length - 2] !== "pink") {
-                            chairArray.push("pink");
-                        } else {
-                            chairArray.push("purple");
-                        }
+                    // determine number of chairs based on room
+                    if (vm.room === "Churchill") {
+                        chairsPerRow = 12;
+                        maxChairs = 20 * 12;
+                    } else if (vm.room === "Fleming") {
+                        chairsPerRow = 18;
+                        maxChairs = 12 * 18;
+                    } else if (vm.room === "Whittle") {
+                        chairsPerRow = 13;
+                        maxChairs = 20 * 13;
+                    } else if (vm.room === "Mountbatten") {
+                        chairsPerRow = 10;
+                        maxChairs = 12 * 10;
                     }
-                    return chairArray;
+
+                    chairs = (function () {
+                        var chairArray = [],
+                            i,
+                            rnd;
+                        for (i = 0; i < maxChairs; i = i + 1) {
+                            rnd = Math.random();
+                            if (rnd < 0.15 && chairArray[chairArray.length - 1] !== "pink" && chairArray[chairArray.length - 2] !== "pink") {
+                                chairArray.push("pink");
+                            } else {
+                                chairArray.push("purple");
+                            }
+                        }
+                        return chairArray;
+                    }());
+
+                    // clear existing chairs
+                    $chairsContainer.innerHTML = "";
+
+                    chairs.forEach(function (colour) {
+
+                        var $el = document.createElement("a-entity"),
+                            xPos;
+
+                        if (chairIndex === chairsPerRow) {
+                            if (side === "left") {
+                                side = "right";
+                            } else {
+                                side = "left";
+                                row = row + 1;
+                            }
+                            chairIndex = 1;
+                        } else {
+                            chairIndex = chairIndex + 1;
+                        }
+
+                        xPos = ((chairIndex - 1) * CHAIR_WIDTH) + (AISLE_WIDTH / 2);
+                        if (side === "left") {
+                            xPos = xPos * -1;
+                        }
+
+                        //console.log(chairIndex + " : " + side + ": " + row + " : " + xPos);
+
+                        $el.setAttribute("obj-model", "obj: #chair-" + colour + "-obj; mtl: #chair-" + colour + "-mtl");
+                        $el.className = "chair";
+                        $el.setAttribute("rotation", "0 180 0");
+                        $el.setAttribute("position", xPos + " 0.58 " + ((row * CHAIR_DEPTH) + frontRow));
+                        $chairsContainer.appendChild($el);
+                    });
                 }());
 
-                // clear existing chairs
-                $chairsContainer.innerHTML = "";
-
-                chairs.forEach(function (colour) {
-
-                    var $el = document.createElement("a-entity"),
-                        xPos;
-
-                    if (chairIndex === chairsPerRow) {
-                        if (side === "left") {
-                            side = "right";
-                        } else {
-                            side = "left";
-                            row = row + 1;
-                        }
-                        chairIndex = 1;
-                    } else {
-                        chairIndex = chairIndex + 1;
-                    }
-
-                    xPos = ((chairIndex - 1) * CHAIR_WIDTH) + (AISLE_WIDTH / 2);
-                    if (side === "left") {
-                        xPos = xPos * -1;
-                    }
-
-                    //console.log(chairIndex + " : " + side + ": " + row + " : " + xPos);
-
-                    $el.setAttribute("obj-model", "obj: #chair-" + colour + "-obj; mtl: #chair-" + colour + "-mtl");
-                    $el.className = "chair";
-                    $el.setAttribute("rotation", "0 180 0");
-                    $el.setAttribute("position", xPos + " 0.58 " + ((row * CHAIR_DEPTH) + frontRow));
-                    $chairsContainer.appendChild($el);
-                });
-            }());
+            } else { // hide chairs
+                document.querySelector("#chairs").innerHTML = "";
+            }
 
         }
 

@@ -18,6 +18,7 @@ var vm;
 
         data: {
             room: "Whittle",
+            seatingStyle: "None",
             roomsData: {
                 fixedSet: { // Mountbatten & Churchill
                     setWashCentre: "#0b63f4",
@@ -25,13 +26,12 @@ var vm;
                     setWashSame: true
                 }
             },
-            width: 40,
             items: [
-                {type: "stage", width: 40, height: 2, depth: 8, id: "01"},
-                {type: "set", width: 40, height: 11, yPos: 2, zPos: -4, lighting: "#0b63f4", id: "02"},
-                {type: "screen", width: 14, height: 8, yPos: 6, zPos: -3, surround: 0.2, id: "03"},
-                {type: "lectern", colour: "#0b63f4", id: "lec1", xPos: 4, yPos: -0.73, zPos: 2.1, id: "04"},
-                {type: "top-table", id: "tt1", size: 2, xPos: -5, yPos: 0.68, zPos: 0.7, id: "05"}
+                {type: "stage", width: 40, height: 2, depth: 8, xPos: 0, yPos: 0, zPos: 0, id: "item01"},
+                {type: "set", width: 40, height: 11, yPos: 2, zPos: -4, lighting: "#0b63f4", id: "item02"},
+                {type: "screen", width: 14, height: 8, yPos: 6, zPos: -3, surround: 0.2, id: "item03"},
+                {type: "lectern", colour: "#0b63f4", id: "lec1", xPos: 4, yPos: -0.73, zPos: 2.1, id: "item04"},
+                {type: "top-table", id: "tt1", size: 2, xPos: -5, yPos: 0.68, zPos: 0.7, id: "item05"}
             ]
         },
 
@@ -69,15 +69,18 @@ var vm;
                 img.src = "user-content/" + item.src;
             },
 
-            addItem: function (type) {
+            addItem: function (type, width = 3, xPos = 4.3, yPos = 2.7, zPos = -1.19) {
                 this.items.push({
                     id: "item" + Date.now(),
                     type: type,
-                    width: 3,
-                    yPos: 2.7,
-                    xPos: 4.3,
-                    zPos: -1.19
+                    width: width,
+                    height: type === "stage" ? 2 : null,
+                    depth: type === "stage" ? 8 : null,
+                    xPos: xPos,
+                    yPos: yPos,
+                    zPos: zPos
                 });
+                render(this.items[this.items.length -1]);
             },
 
             removeItem: function (id) {
