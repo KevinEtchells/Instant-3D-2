@@ -67,7 +67,6 @@ var render;
 
                 if (vm.room === "Churchill") {
 
-                    // TO DO: adjust width/height of flats
                     $items.push(document.createElement("a-box"));
                     $items.push(document.createElement("a-box"));
                     $items.push(document.createElement("a-box"));
@@ -93,26 +92,30 @@ var render;
                     $items[2].setAttribute("rotation", "0 -41.5 0");
 
                 } else if (vm.room === "Fleming" || vm.room === "Whittle") {
+
                     (function () {
                         var i,
                             startXPos = (feetToMetres(item.width) / -2) + 0.61;
+                        const HEIGHT = 11;
+                        $items.push(document.createElement("a-entity"));
+                        $items[0].setAttribute("id", item.id);
                         for (i = 0; i < item.width / 4; i = i + 1) {
 
                             // set panel
-                            $items.push(document.createElement("a-box"));
-                            $items[i * 2].setAttribute("width", 1.22);
-                            $items[i * 2].setAttribute("height", feetToMetres(item.height));
-                            $items[i * 2].setAttribute("position", ((i * 1.2205) + startXPos) + " " + (feetToMetres(item.yPos || 0) + (feetToMetres(item.height) / 2)) + " " + feetToMetres(item.zPos || 0));
-                            $items[i * 2].setAttribute("color", item.lighting || "#FFF");
-                            $items[i * 2].setAttribute("src", "assets/uplighters.png");
-                            $items[i * 2].setAttribute("depth", "0.05");
+                            let $set = document.createElement("a-box");
+                            $set.setAttribute("width", 1.22);
+                            $set.setAttribute("height", feetToMetres(HEIGHT));
+                            $set.setAttribute("position", ((i * 1.2205) + startXPos + feetToMetres(item.xPos || 0)) + " " + (feetToMetres(item.yPos || 0) + (feetToMetres(HEIGHT) / 2)) + " " + feetToMetres(item.zPos || 0));
+                            $set.setAttribute("color", item.lighting || "#FFF");
+                            $set.setAttribute("src", "#uplighter");
+                            $set.setAttribute("depth", "0.05");
+                            $items[0].appendChild($set);
 
-                            // chromabatten
-                            $items.push(document.createElement("a-entity"));
-                            $items[(i * 2) + 1].setAttribute("gltf-model", "#chromabatten");
-                            //$items[(i * 2) + 1].id = "chromabatten" + i;
-                            $items[(i * 2) + 1].setAttribute("position", ((i * 1.22) + startXPos) + " 0.68 " + (feetToMetres(item.zPos || 0) + 0.2));
-
+                            // uplighter
+                            let $uplighter = document.createElement("a-entity");
+                            $uplighter.setAttribute("gltf-model", "#chromabatten");
+                            $uplighter.setAttribute("position", ((i * 1.22) + startXPos + feetToMetres(item.xPos || 0)) + " " + (feetToMetres(item.yPos || 0) + 0.07) + " " + (feetToMetres(item.zPos || 0) + 0.2));
+                            $items[0].appendChild($uplighter);
                         }
                     }());
 
