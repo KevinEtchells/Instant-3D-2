@@ -1,5 +1,4 @@
 /*global Vue*/
-/*global render*/
 /*global window*/
 /*global document*/
 /*global FileReader*/
@@ -33,13 +32,127 @@ var vm;
                 {type: "screen", width: 14, height: 8, yPos: 6, zPos: -3, surround: 0.2, id: "item03"},
                 {type: "lectern", colour: "#0b63f4", id: "lec1", xPos: 4, yPos: -0.73, zPos: 2.1, id: "item04"},
                 {type: "top-table", id: "tt1", size: 2, xPos: -5, yPos: 0.68, zPos: 0.7, id: "item05"}
-            ]
+            ],
+
+            feetToMetres: function (value) {
+                return value * 0.3048;
+            },
+            getChairRotation: function (totalChairs, chairIndex) {
+                let middle = Math.round(totalChairs / 2) - 1;
+                let rotations = [];
+                let amount = 0;
+                // first half:
+                for (let i = middle; i >= 0; i--) {
+                    rotations[i] = amount;
+                    amount = amount + 10;
+                }
+                // second half:
+                amount =  totalChairs % 2 ? -10 : 0;
+                for (let i = middle + 1; i <= totalChairs; i++) {
+                    rotations[i] = amount;
+                    amount = amount - 10;
+                }
+                return rotations[chairIndex];
+            },
+
+            getChairs: function (room) {
+
+                let self = this;
+
+                const AISLE_WIDTH = 2.5,
+                    CHAIR_WIDTH = 0.55,
+                    CHAIR_DEPTH = 1.2,
+                    frontRow = (function () {
+                        let furthestPos = 2.4
+                        if (room === "Fleming" || room === "Whittle") {
+                            // check each stage position
+                            self.items.forEach(function (item) {
+                                if (item.type === "stage") {
+                                    const newPos = self.feetToMetres(item.depth) + self.feetToMetres(item.zPos) - 0.2;
+                                    if (furthestPos < newPos) {
+                                        furthestPos = newPos;
+                                    }
+                                }
+                            });
+                        }
+                        return furthestPos;
+                    }());
+
+                let maxChairs,
+                    chairsPerRow,
+                    chairIndex = 0,
+                    row = 1,
+                    side = "left",
+                    chairs;
+
+                // determine number of chairs based on room
+                if (room === "Churchill") {
+                    chairsPerRow = 12;
+                    maxChairs = 20 * 12;
+                } else if (room === "Fleming") {
+                    chairsPerRow = 18;
+                    maxChairs = 12 * 18;
+                } else if (room === "Whittle") {
+                    chairsPerRow = 13;
+                    maxChairs = 20 * 13;
+                } else if (room === "Mountbatten") {
+                    chairsPerRow = 10;
+                    maxChairs = 12 * 10;
+                }
+
+                chairs = (function () {
+                    var chairArray = [],
+                        i,
+                        rnd;
+                    for (i = 0; i < maxChairs; i = i + 1) {
+                        rnd = Math.random();
+                        if (rnd < 0.15 && chairArray[chairArray.length - 1] !== "pink" && chairArray[chairArray.length - 2] !== "pink") {
+                            chairArray.push({colour: "pink"});
+                        } else {
+                            chairArray.push({colour: "purple"});
+                        }
+                    }
+                    return chairArray;
+                }());
+
+                chairs.forEach(function (chair) {
+
+                    let xPos;
+
+                    if (chairIndex === chairsPerRow) {
+                        if (side === "left") {
+                            side = "right";
+                        } else {
+                            side = "left";
+                            row = row + 1;
+                        }
+                        chairIndex = 1;
+                    } else {
+                        chairIndex = chairIndex + 1;
+                    }
+
+                    xPos = ((chairIndex - 1) * CHAIR_WIDTH) + (AISLE_WIDTH / 2);
+                    if (side === "left") {
+                        xPos = xPos * -1;
+                    }
+
+                    chair.position = xPos + " 0.58 " + ((row * CHAIR_DEPTH) + frontRow);
+                });
+
+                return chairs;
+
+            }
+
         },
 
         methods: {
 
-            update: function (item, renderRoom) {
-                render(item, renderRoom);
+            changeRoom: function (newRoom) {
+                let self = this;
+                self.room = "";
+                Vue.nextTick(function () {
+                    self.room = newRoom;
+                });
             },
 
             updateWidth: function (event) {
@@ -49,7 +162,6 @@ var vm;
                         item.width = data.width;
                     }
                 });
-                render();
             },
 
             updateSetWash: function (event) {
@@ -58,14 +170,12 @@ var vm;
                         item.lighting = event.target.value;
                     }
                 });
-                render();
             },
 
             newGraphic: function (item) {
                 var img = new Image();
                 img.onload = function () {
                     item.ratio = img.height / img.width;
-                    render(item);
                 };
                 img.src = "user-content/" + item.src;
             },
@@ -81,7 +191,6 @@ var vm;
                     yPos: yPos,
                     zPos: zPos
                 });
-                render(this.items[this.items.length -1]);
             },
 
             removeItem: function (id) {
@@ -94,7 +203,6 @@ var vm;
                 if (foundIndex !== -1) {
                     this.items.splice(foundIndex, 1);
                 }
-                render();
             },
 
             selectItem: function (clickedItem) {
@@ -123,7 +231,6 @@ var vm;
                                 self[prop] = data[prop];
                             }
                         }
-                        render();
                     };
                     reader.readAsText(event.target.files[0]);
                 }
@@ -133,12 +240,6 @@ var vm;
                 saveAs(blob, "visual.json");
             }
 
-        },
-
-        created: function () {
-            window.setTimeout(function () {
-                render(null, true);
-            }, 1000);
         }
 
     });
@@ -148,27 +249,19 @@ var vm;
         var key = event.key.toLowerCase();
         vm.items.forEach(function (item) {
             if (item.selected) {
-
                 if (key === "i") {
                     item.yPos = item.yPos + 0.1;
-                    render(item);
                 } else if (key === "k") {
                     item.yPos = item.yPos - 0.1;
-                    render(item);
                 } else if (key === "j") {
                     item.xPos = item.xPos - 0.1;
-                    render(item);
                 } else if (key === "l") {
                     item.xPos = item.xPos + 0.1;
-                    render(item);
                 } else if (key === "u") {
                     item.zPos = item.zPos - 0.1;
-                    render(item);
                 } else if (key === "o") {
                     item.zPos = item.zPos + 0.1;
-                    render(item);
                 }
-
             }
         });
 

@@ -1,0 +1,16 @@
+body {background-color: black; color: white; font-family: Arial, sans-serif; font-size: 10pt; margin: 0; overflow: hidden;}
+a-scene {height: calc(100vh - 169px); width: 100vw;}
+#controls {display: flex; padding: 5px;}
+#controls > div {border: 1px solid grey; display: flex; margin-left: 5px; padding: 5px; width: calc(100vw - 142px);}
+.tabs {list-style-type: none; margin: 0; padding: 0;}
+.tabs button {width: 115px;}
+.tabs .selected {background-color: blue; color: white;}
+h2 {font-size: 1.1em; margin: 0 0 5px 0;}
+label {display: block; height: 40px; font-size: 0.9em; margin-top: 5px;}
+label span {font-weight: bold;}
+thead {font-size: 0.8em;}
+td {padding: 0 2px; text-align: center;}
+select, button {font-size: 0.8em; padding: 5px;}
+td input[type='number'], td input[type='text'] {padding: 3px;}
+input[type='number'] {width: 40px;}
+input[type='file'] {width: 180px;}
