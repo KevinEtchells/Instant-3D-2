@@ -8,17 +8,17 @@
         <script src="js/libs/FileSaver.min.js" defer></script>
         <style>
             body {background-color: black; color: white; display: flex; flex-direction: column; font-family: Arial, sans-serif; font-size: 10pt; margin: 0; overflow: hidden;}
-            a-scene {height: calc(100vh - 200px); width: 100vw;}
-            #app {display: flex; height: 190px; justify-content: space-between; padding: 5px;}
-        #app > div {border: 1px solid grey; padding: 5px; /*width: calc(25vw - 17.5px);*/}
+            a-scene {height: calc(100vh - 169px); width: 100vw;}
+            #app {display: flex; padding: 5px;}
+            #app > div {border: 1px solid grey; margin-left: 5px; padding: 5px; width: calc(100vw - 142px);}
+            .tabs {list-style-type: none; margin: 0; padding: 0;}
+            .tabs button {width: 115px;}
+            .tabs .selected {background-color: blue; color: white;}
             h2 {font-size: 1.1em; margin: 0 0 5px 0;}
-            ul {list-style-type: none; padding-left: 0;}
-            li {border-bottom: 1px solid #555; margin-bottom: 10px; padding-bottom: 10px;}
             label {display: block; height: 40px; font-size: 0.9em; margin-top: 5px;}
-            label > label {display: inline-block;}
             label span {font-weight: bold;}
             thead {font-size: 0.8em;}
-            td {text-align: center;}
+            td {padding: 0 2px; text-align: center;}
             select, button {font-size: 0.8em; padding: 5px;}
             td input[type='number'], td input[type='text'] {padding: 3px;}
             input[type='number'] {width: 40px;}
@@ -61,14 +61,25 @@
 
         <div id="app">
 
-            <div>
-                <h2>ROOM:</h2>
-                <select v-model="room" v-on:change="update(null, true)">
-                    <option>Churchill</option>
-                    <option>Fleming</option>
-                    <option>Whittle</option>
-                    <option>Mountbatten</option>
-                </select>
+            <ul class="tabs">
+                <li><button v-on:click="selectedTab = 'room'" v-bind:class="{selected: selectedTab === 'room'}">ROOM</button></li>
+                <li><button v-on:click="selectedTab = 'stage'" v-bind:class="{selected: selectedTab === 'stage'}">STAGE</button></li>
+                <li><button v-on:click="selectedTab = 'set'" v-bind:class="{selected: selectedTab === 'set'}">SET</button></li>
+                <li><button v-on:click="selectedTab = 'graphics'" v-bind:class="{selected: selectedTab === 'graphics'}">GRAPHICS</button></li>
+                <li><button v-on:click="selectedTab = 'stage-furniture'" v-bind:class="{selected: selectedTab === 'stage-furniture'}">STAGE FURNITURE</button></li>
+                <li><button v-on:click="selectedTab = 'file'" v-bind:class="{selected: selectedTab === 'file'}">FILE</button></li>
+            </ul>
+
+            <div v-if="selectedTab === 'room'">
+                <label>
+                    <span>Room: </span>
+                    <select v-model="room" v-on:change="update(null, true)">
+                        <option>Churchill</option>
+                        <option>Fleming</option>
+                        <option>Whittle</option>
+                        <option>Mountbatten</option>
+                    </select>
+                </label>
                 <label>
                     <span>Seating Style: </span>
                     <select v-model="seatingStyle" v-on:change="update(null, true)">
@@ -78,8 +89,45 @@
                 </label>
             </div>
 
-            <div>
-                <h2>STAGE / SET:</h2>
+            <div v-if="selectedTab === 'stage'">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>&#10000;</th>
+                            <th>Type</th>
+                            <th>Width</th>
+                            <th>Colour</th>
+                            <th>Options</th>
+                            <th>&#10006;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="room === 'Churchill' || room === 'Mountbatten'">
+                            <td></td>
+                            <td>Fixed Stage</td>
+                            <td>N/A</td>
+                            <td><input v-if="roomsData.carpetedStage" type="color" v-model="item.stageColour" v-on:change="update()"/><span v-else>N/A</span></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr v-for="item in items" v-if="(room === 'Fleming' || room === 'Whittle') && item.type === 'stage'">
+                            <td><input type="checkbox" v-model="item.selected" v-on:click="selectItem(item)"/></td>
+                            <td>
+                                <select v-model="item.type">
+                                    <option value="stage">Stage Blocks</option>
+                                </select>
+                            </td>
+                            <td><input type="number" v-model="item.width" step="4" v-on:change="update()"/> ft</template></td>
+                            <td><input v-if="item.carpeted" type="color" v-model="item.colour" v-on:change="update()"/><span v-else>N/A</span></td>
+                            <td></td>
+                            <td><button v-on:click="removeItem(item.id)">&#10006;</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button v-on:click="addItem('stage', 20, 0, 0, 0)">Add Item</button>
+            </div>
+
+            <div v-if="selectedTab === 'set'">
                 <table>
                     <thead>
                         <tr>
@@ -108,13 +156,11 @@
                             <td>Linked: <input type="checkbox" v-model="roomsData.fixedSet.setWashSame" v-on:change="update()"/></td>
                             <td></td>
                         </tr>
-                        </tr>
-                        <tr v-for="item in items" v-if="(room === 'Fleming' || room === 'Whittle') && (item.type === 'stage' || item.type === 'set')">
+                        <tr v-for="item in items" v-if="(room === 'Fleming' || room === 'Whittle') && item.type === 'set'">
                             <td><input type="checkbox" v-model="item.selected" v-on:click="selectItem(item)"/></td>
                             <td>
                                 <select v-model="item.type">
-                                    <option value="stage">Stage</option>
-                                    <option value="set">Set</option>
+                                    <option value="set">Std Flats</option>
                                 </select>
                             </td>
                             <td><input type="number" v-model="item.width" step="4" v-on:change="update()"/> ft</template></td>
@@ -124,11 +170,10 @@
                         </tr>
                     </tbody>
                 </table>
-                <button v-on:click="addItem('stage', 20, 0, 0, 0)">Add Item</button>
+                <button v-on:click="addItem('set', 4, 0, 0, 0)">Add Item</button>
             </div>
 
-            <div>
-                <h2>GRAPHICS:</h2>
+            <div v-if="selectedTab === 'graphics'">
                 <table>
                     <thead>
                         <tr>
@@ -150,8 +195,7 @@
                 <button v-on:click="addItem('graphic')">Add Graphic</button>
             </div>
 
-            <div>
-                <h2>STAGE FURNITURE:</h2>
+            <div v-if="selectedTab === 'stage-furniture'">
                 <table>
                     <thead>
                         <tr>
@@ -183,13 +227,15 @@
                 <button v-on:click="addItem('lectern')">Add Item</button>
             </div>
 
-            <div>
-                <h2>FILE:</h2>
+            <div v-if="selectedTab === 'file'">
                 <label>
                     <span>Open File: </span>
                     <input type="file" v-on:change="openFile($event)"/>
                 </label>
-                <button v-on:click="saveFile()">Save to File</button>
+                <label>
+                    <span>Save File: </span>
+                    <button v-on:click="saveFile()">Save</button>
+                </label>
                 <label>
                     <span>Screenshot: </span>Ctrl + Alt + S
                 </label>
