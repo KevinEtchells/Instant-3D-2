@@ -22,6 +22,8 @@
                     <a-asset-item id="felt-lectern-internal" src="assets/felt-lectern-internal.obj"></a-asset-item>
                     <a-asset-item id="tt-gltf" src="assets/top-table.glb"></a-asset-item>
                     <a-asset-item id="bucket-chair" src="assets/bucket-chair.glb"></a-asset-item>
+                    <a-asset-item id="coffee-table-obj" src="assets/coffee-table.obj"></a-asset-item>
+                    <a-asset-item id="coffee-table-mtl" src="assets/coffee-table.mtl"></a-asset-item>
                     <img id="uplighter" src="assets/uplighters.png"/>
                     <a-asset-item id="chromabatten" src="assets/chromabatten.glb"></a-asset-item>
                     <a-asset-item id="chair-purple-obj" src="assets/chair-purple.obj"></a-asset-item>
@@ -75,6 +77,10 @@
 
                     <a-entity v-if="item.type === 'bucket-chairs'" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : 0)) + ' ' + (item.zPos || 0)">
                         <a-entity v-for="i in item.size" gltf-model="#bucket-chair" :rotation="'0 ' + getChairRotation(item.size, i) + ' 0'"  :position="((i + 1) * 0.8) +  ' 0 ' + (Math.pow(Math.abs(getChairRotation(item.size, i)), 1.7) * 0.002)"></a-entity><!-- the Y position isn't linear relative to rotation -->
+                    </a-entity>
+
+                    <a-entity v-if="item.type === 'coffee-table'" obj-model="obj: #coffee-table-obj; mtl: #coffee-table-mtl" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : 0)) + ' ' + (item.zPos || 0)">
+
                     </a-entity>
 
                 </template>
@@ -240,7 +246,7 @@
                             <tr/>
                         <thead>
                         <tbody>
-                            <tr v-for="item in items" v-if="item.type === 'lectern' || item.type === 'top-table' || item.type === 'bucket-chairs'">
+                            <tr v-for="item in items" v-if="item.type === 'lectern' || item.type === 'top-table' || item.type === 'bucket-chairs' || item.type === 'coffee-table'">
                                 <td><input type="checkbox" v-model="item.selected" v-on:click="selectItem(item)"/></td>
                                 <td>
                                     <select v-if="item.type === 'bucket-chairs' || item.type === 'white chairs'" v-model="item.type">
@@ -259,6 +265,7 @@
                         <button v-on:click="addItem('lectern', 4, -0.73, 2.1)">Add Lectern</button>
                         <button v-on:click="addItem('top-table', -5, 0.68, 0.7)">Add Top Table</button>
                         <button v-on:click="addItem('bucket-chairs', -5, 0.68, 0.7)">Add Chairs</button>
+                        <button v-on:click="addItem('coffee-table', -5, 0.68, 0.7)">Add Coffee Table</button>
                     </div>
                 </div>
 
