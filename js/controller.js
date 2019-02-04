@@ -100,6 +100,7 @@ var vm;
                     maxChairs = 12 * 10;
                 }
 
+                // Create chair array and Randomly determine chair colour
                 chairs = (function () {
                     var chairArray = [],
                         i,
@@ -141,6 +142,77 @@ var vm;
 
                 return chairs;
 
+            },
+
+            getCabaretTables: function (room) {
+
+                let self = this;
+
+                const TABLE_RADIUS = 3.5,
+                    frontRow = (function () { // TO DO: Make this DRY
+                        let furthestPos = 2.4
+                        if (room === "Fleming" || room === "Whittle") {
+                            // check each stage position
+                            self.items.forEach(function (item) {
+                                if (item.type === "stage") {
+                                    const newPos = self.feetToMetres(item.depth) + self.feetToMetres(item.zPos) - 0.2;
+                                    if (furthestPos < newPos) {
+                                        furthestPos = newPos;
+                                    }
+                                }
+                            });
+                        }
+                        return furthestPos;
+                    }());
+
+                let maxTables,
+                    tablesPerRow,
+                    tableIndex = 0,
+                    row = 1,
+                    tables;
+
+                // determine number of tables based on room
+                if (room === "Churchill") {
+                    tablesPerRow = 6;
+                    maxTables = 6 * 5;
+                } else if (room === "Fleming") {
+                    tablesPerRow = 6;
+                    maxTables = 6 * 4;
+                } else if (room === "Whittle") {
+                    tablesPerRow = 4;
+                    maxTables = 4 * 5;
+                } else if (room === "Mountbatten") {
+                    tablesPerRow = 4;
+                    maxTables = 4 * 4;
+                }
+
+                // Create table array
+                tables = (function () {
+                    let tableArray = [];
+                    for (let i = 0; i < maxTables; i = i + 1) {
+                        tableArray.push({});
+                    }
+                    return tableArray;
+                }());
+
+                tables.forEach(function (table) {
+
+                    let xPos;
+
+                    if (tableIndex === tablesPerRow) {
+                        row = row + 1;
+                        tableIndex = 1;
+                    } else {
+                        tableIndex = tableIndex + 1;
+                    }
+
+                    xPos = ((tableIndex - 1) * TABLE_RADIUS) - ((tablesPerRow / 2) * TABLE_RADIUS) + (TABLE_RADIUS / 2);
+
+                    table.position = xPos + " 0 " + ((row * TABLE_RADIUS) + (frontRow - (TABLE_RADIUS / 2)));
+                });
+
+                return tables;
+
             }
 
         },
@@ -149,9 +221,12 @@ var vm;
 
             changeRoom: function (newRoom) {
                 let self = this;
+                const items = JSON.parse(JSON.stringify(self.items));
+                self.items = [];
                 self.room = "";
                 Vue.nextTick(function () {
                     self.room = newRoom;
+                    self.items = items;
                 });
             },
 

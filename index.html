@@ -30,6 +30,7 @@
                     <a-asset-item id="chair-purple-mtl" src="assets/chair-purple.mtl"></a-asset-item>
                     <a-asset-item id="chair-pink-obj" src="assets/chair-pink.obj"></a-asset-item>
                     <a-asset-item id="chair-pink-mtl" src="assets/chair-pink.mtl"></a-asset-item>
+                    <a-asset-item id="cabaret-table" src="assets/cabaret-table.glb"></a-asset-item>
                 </a-assets>
 
                 <a-entity v-if="room === 'Churchill'" gltf-model="#churchill" rotation="0 0 0" position="0 0 0.3"></a-entity>
@@ -79,13 +80,12 @@
                         <a-entity v-for="i in item.size" gltf-model="#bucket-chair" :rotation="'0 ' + getChairRotation(item.size, i) + ' 0'"  :position="((i + 1) * 0.8) +  ' 0 ' + (Math.pow(Math.abs(getChairRotation(item.size, i)), 1.7) * 0.002)"></a-entity><!-- the Y position isn't linear relative to rotation -->
                     </a-entity>
 
-                    <a-entity v-if="item.type === 'coffee-table'" obj-model="obj: #coffee-table-obj; mtl: #coffee-table-mtl" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : 0)) + ' ' + (item.zPos || 0)">
-
-                    </a-entity>
+                    <a-entity v-if="item.type === 'coffee-table'" obj-model="obj: #coffee-table-obj; mtl: #coffee-table-mtl" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : 0)) + ' ' + (item.zPos || 0)"></a-entity>
 
                 </template>
 
                 <a-entity v-if="seatingStyle === 'Theatre'" v-for="chair in getChairs(room)" :position="chair.position" :obj-model="'obj: #chair-' + chair.colour + '-obj; mtl: #chair-' + chair.colour + '-mtl'" rotation="0 180 0"></a-entity>
+                <a-entity v-if="seatingStyle === 'Cabaret'" v-for="table in getCabaretTables(room)" :position="table.position" gltf-model="#cabaret-table"></a-entity>
 
                 <a-entity light="type:ambient;intensity:0.1"></a-entity>
                 <a-entity light="intensity:0.8" position="-0.5 2.1 6.3" rotation="19 0 0"></a-entity>
@@ -123,6 +123,7 @@
                         <select v-model="seatingStyle">
                             <option>None</option>
                             <option>Theatre</option>
+                            <option>Cabaret</option>
                         </select>
                     </label>
                 </div>
