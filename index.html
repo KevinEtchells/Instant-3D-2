@@ -31,6 +31,7 @@
                     <a-asset-item id="chair-pink-obj" src="assets/chair-pink.obj"></a-asset-item>
                     <a-asset-item id="chair-pink-mtl" src="assets/chair-pink.mtl"></a-asset-item>
                     <a-asset-item id="cabaret-table" src="assets/cabaret-table.glb"></a-asset-item>
+                    <img id="felt" src="assets/textures/felt.jpg"/>
                 </a-assets>
 
                 <a-entity v-if="room === 'Churchill'" gltf-model="#churchill" rotation="0 0 0" position="0 0 0.3"></a-entity>
@@ -75,7 +76,11 @@
                     <a-entity v-if="item.type === 'top-table'" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : 0)) + ' ' + (item.zPos || 0)">
                         <a-entity v-for="i in item.size" gltf-model="#tt-gltf" :position="((i + 1) * 0.7) + ' 0 0'">
                             <a-entity obj-model="obj: #chair-purple-obj; mtl: #chair-purple-mtl" position="0 0.45 -0.2"></a-entity>
+                            <!--<a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.71 0.76 0.007" position="-0.02 0.32 0.35" :material="'src: #felt; color: ' + item.colour + '; repeat: 2 2; roughness: 1; metalness: 0;'"></a-entity>-->
+                            <a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.71 0.76 0.007" position="-0.02 0.32 0.35" :material="'color: ' + item.colour"></a-entity>
                         </a-entity>
+                        <a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.76 0.76 0.007" :position="((item.size * 0.7) + 1.032) + ' 0.32 -0.029'" rotation="0 90 0" :material="'color: ' + item.colour + '; emissive: ' + item.colour + '; emissiveIntensity: 0.5;'"></a-entity>
+                        <a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.76 0.76 0.007" position="1.028 0.32 -0.029" rotation="0 90 0" :material="'color: ' + item.colour + '; emissive: ' + item.colour + '; emissiveIntensity: 0.5;'"></a-entity>
                     </a-entity>
 
                     <a-entity v-if="item.type === 'bucket-chairs'" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : 0)) + ' ' + (item.zPos || 0)">
@@ -259,7 +264,9 @@
                                 </td>
                                 <td><input v-if="item.type === 'top-table' || item.type === 'bucket-chairs'" type="number" v-model.number="item.size"/><span v-else>N/A</span></td>
                                 <td><input v-if="item.type === 'lectern' || item.type === 'top-table' && item.modpanel" type="color" v-model="item.colour"/><span v-else>N/A</span></td>
-                                <td></td>
+                                <td>
+                                    <label v-if="item.type === 'top-table'"><input type="checkbox" v-model="item.modpanel"/> Mod Panel</lable>
+                                </td>
                                 <td><button v-on:click="removeItem(item.id)">&#10006;</button></td>
                             </tr>
                         </tbody>
