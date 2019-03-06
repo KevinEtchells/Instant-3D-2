@@ -11,13 +11,31 @@ var vm;
 
     "use strict";
 
+    const frontRow = function (room) {
+        let furthestPos = 2.4
+        if (room === "Fleming" || room === "Whittle") {
+            // check each stage position
+            vm.items.forEach(function (item) {
+                if (item.type === "stage") {
+                    const newPos = vm.feetToMetres(item.depth) + vm.feetToMetres(item.zPos) - 0.2;
+                    if (furthestPos < newPos) {
+                        furthestPos = newPos;
+                    }
+                }
+            });
+        } else if (room === "St James") {
+            furthestPos = 1.8;
+        }
+        return furthestPos;
+    };
+
     vm = new Vue({
 
         el: "#app",
 
         data: {
             selectedTab: "room",
-            room: "Whittle",
+            room: "St James",
             seatingStyle: "None",
             roomsData: {
                 fixedSet: { // Mountbatten & Churchill
@@ -61,22 +79,7 @@ var vm;
 
                 const AISLE_WIDTH = 2.5,
                     CHAIR_WIDTH = 0.55,
-                    CHAIR_DEPTH = 1.2,
-                    frontRow = (function () {
-                        let furthestPos = 2.4
-                        if (room === "Fleming" || room === "Whittle") {
-                            // check each stage position
-                            self.items.forEach(function (item) {
-                                if (item.type === "stage") {
-                                    const newPos = self.feetToMetres(item.depth) + self.feetToMetres(item.zPos) - 0.2;
-                                    if (furthestPos < newPos) {
-                                        furthestPos = newPos;
-                                    }
-                                }
-                            });
-                        }
-                        return furthestPos;
-                    }());
+                    CHAIR_DEPTH = 1.2;
 
                 let maxChairs,
                     chairsPerRow,
@@ -95,6 +98,9 @@ var vm;
                 } else if (room === "Whittle") {
                     chairsPerRow = 13;
                     maxChairs = 20 * 13;
+                } else if (room === "St James") {
+                    chairsPerRow = 8;
+                    maxChairs = 8 * 14;
                 } else if (room === "Mountbatten") {
                     chairsPerRow = 10;
                     maxChairs = 12 * 10;
@@ -137,7 +143,7 @@ var vm;
                         xPos = xPos * -1;
                     }
 
-                    chair.position = xPos + " 0.58 " + ((row * CHAIR_DEPTH) + frontRow);
+                    chair.position = xPos + " 0.58 " + ((row * CHAIR_DEPTH) + frontRow(room));
                 });
 
                 return chairs;
@@ -148,22 +154,7 @@ var vm;
 
                 let self = this;
 
-                const TABLE_RADIUS = 3.5,
-                    frontRow = (function () { // TO DO: Make this DRY
-                        let furthestPos = 2.4
-                        if (room === "Fleming" || room === "Whittle") {
-                            // check each stage position
-                            self.items.forEach(function (item) {
-                                if (item.type === "stage") {
-                                    const newPos = self.feetToMetres(item.depth) + self.feetToMetres(item.zPos) - 0.2;
-                                    if (furthestPos < newPos) {
-                                        furthestPos = newPos;
-                                    }
-                                }
-                            });
-                        }
-                        return furthestPos;
-                    }());
+                const TABLE_RADIUS = 3.5;
 
                 let maxTables,
                     tablesPerRow,
@@ -181,6 +172,9 @@ var vm;
                 } else if (room === "Whittle") {
                     tablesPerRow = 4;
                     maxTables = 4 * 5;
+                } else if (room === 'St James') {
+                    tablesPerRow = 4;
+                    maxTables = 4 * 3;
                 } else if (room === "Mountbatten") {
                     tablesPerRow = 4;
                     maxTables = 4 * 4;
@@ -208,7 +202,7 @@ var vm;
 
                     xPos = ((tableIndex - 1) * TABLE_RADIUS) - ((tablesPerRow / 2) * TABLE_RADIUS) + (TABLE_RADIUS / 2);
 
-                    table.position = xPos + " 0 " + ((row * TABLE_RADIUS) + (frontRow - (TABLE_RADIUS / 2)));
+                    table.position = xPos + " 0 " + ((row * TABLE_RADIUS) + (frontRow(room) - (TABLE_RADIUS / 2)));
                 });
 
                 return tables;
