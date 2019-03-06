@@ -332,6 +332,12 @@ var vm;
                     item.zPos = item.zPos - 0.1;
                 } else if (key === "o") {
                     item.zPos = item.zPos + 0.1;
+                } else if (key === "y") {
+                    item.rot = (item.rot || 0) - 5;
+                    item.zPos = item.zPos - 0.1;
+                } else if (key === "h") {
+                    item.rot = (item.rot || 0) + 5;
+                    item.zPos = item.zPos + 0.1;
                 }
             }
         });

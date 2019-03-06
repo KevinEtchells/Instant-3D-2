@@ -8,3 +8,5 @@ j = left
 l = right
 u = back
 o = forward
+h = rotate clockwise
+y = rotate anti-clockwise
