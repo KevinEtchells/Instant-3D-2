@@ -27,14 +27,12 @@
                     <a-asset-item id="coffee-table-obj" src="assets/coffee-table.obj"></a-asset-item>
                     <a-asset-item id="coffee-table-mtl" src="assets/coffee-table.mtl"></a-asset-item>
                     <img id="uplighter" src="assets/uplighters.png"/>
-                    <!--<img id="uplighters-stjames" src="assets/uplighters-stjames.png"/>-->
                     <a-asset-item id="chromabatten" src="assets/chromabatten.glb"></a-asset-item>
-                    <a-asset-item id="chair-purple-obj" src="assets/chair-purple.obj"></a-asset-item>
-                    <a-asset-item id="chair-purple-mtl" src="assets/chair-purple.mtl"></a-asset-item>
-                    <a-asset-item id="chair-pink-obj" src="assets/chair-pink.obj"></a-asset-item>
-                    <a-asset-item id="chair-pink-mtl" src="assets/chair-pink.mtl"></a-asset-item>
+                    <a-asset-item id="chair-top" src="assets/chair-top.obj"></a-asset-item>
+                    <a-asset-item id="chair-legs-obj" src="assets/chair-legs.obj"></a-asset-item>
+                    <a-asset-item id="chair-legs-mtl" src="assets/chair-legs.mtl"></a-asset-item>
                     <a-asset-item id="cabaret-table" src="assets/cabaret-table.glb"></a-asset-item>
-                    <!--<img id="felt" src="assets/textures/felt.jpg"/>-->
+                    <img id="felt" src="assets/textures/felt3.jpg"/>
                 </a-assets>
 
                 <a-entity v-if="room === 'Churchill'" gltf-model="#churchill" rotation="0 0 0" position="0 0 0.3"></a-entity>
@@ -52,7 +50,7 @@
                     <a-box v-if="item.type === 'set' && room === 'Churchill'" :color="roomsData.fixedSet.setWashCentre" width="8.5" height="4.57" depth="0.05" src="#uplighter" position="-6 3 -1.7" rotation="0 41.5 0"></a-box>
                     <a-box v-if="item.type === 'set' && room === 'Churchill'" :color="roomsData.fixedSet.setWashCentre" width="8.5" height="4.57" depth="0.05" src="#uplighter" position="6 3 -1.7" rotation="0 -41.5 0"></a-box>
                     <a-entity v-if="item.type === 'set' && (room === 'Fleming' || room === 'Whittle')" :position="feetToMetres((item.width / -2) - 2 + (item.xPos || 0)) + ' ' + (feetToMetres(item.yPos || 0) + feetToMetres(5.5)) + ' ' + feetToMetres(item.zPos || 0)">
-                        <a-box v-for="i in (item.width / 4)" :position="i * 1.2205 + ' 0 0'" width="1.22" :height="feetToMetres(11)" depth="0.05" :color="item.lighting || '#FFF'" src="#uplighter"></a-box>
+                        <a-entity geometry="primitive: box" v-for="i in (item.width / 4)" :position="i * 1.2205 + ' 0 0'" :scale="'1.22 ' + feetToMetres(11) + ' 0.05'" :material="'src: #uplighter; color: ' + (item.lighting || '#FFF') + '; emissiveIntensity: 0; emissive: ' + (item.lighting || '#FFF')"></a-entity>
                         <a-entity v-for="i in (item.width / 4)" :position="i * 1.2205 + ' ' + (feetToMetres(-5.5) + 0.07) + ' 0'" gltf-model="#chromabatten"></a-entity>
                     </a-entity>
                     <a-entity v-if="item.type === 'set' && room === 'St James'" scale="1.03 1 1" position="0 0 -1.4" obj-model="obj: #set-4thfloor;" :material="'src: #uplighter; transparent: true; color: ' + roomsData.fixedSet.setWashCentre"></a-entity>
@@ -74,17 +72,17 @@
                     <a-image v-if="item.type === 'graphic' && room === 'Mountbatten'" :rotation="item.xPos > 4.9 ? '0 -60 0' : item.xPos < -4.9 ? '0 60 0' : '0 0 0'" :position="(item.xPos || 0) + ' ' + (item.yPos || 0) + ' ' + ((item.zPos || 0) + 0.02)" opacity="0.8" :width="item.width" :height="item.width * item.ratio" :src="'user-content/' + item.src"></a-image>
 
                     <a-entity v-if="item.type === 'lectern'" rotation="0 -15 0" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.11 : room === 'St James' ? -0.1 : 0)) + ' ' + (item.zPos || 0)">
-                        <a-entity obj-model="obj: #felt-lectern-external;" :material="'color: ' + item.colour"></a-entity>
+                        <a-entity obj-model="obj: #felt-lectern-external;" :material="'roughness: 1; src: #felt; repeat: 1 1; color: ' + item.colour"></a-entity>
                         <a-entity obj-model="obj: #felt-lectern-internal;" material="color: #000;"></a-entity>
-                        <a-entity light="angle:15;type:spot;penumbra:1;castShadow:true" position="2 5 1" rotation="-41.6 43.4 28.9"></a-entity>
-                        <a-entity light="angle:15;type:spot;penumbra:1;castShadow:true" position="-2.4 5 2" rotation="-38 -29 5.5"></a-entity>
+                        <a-entity light="intensity:0.8;angle:15;type:spot;penumbra:1;castShadow:true" position="3 5 1" rotation="-41.6 43.4 28.9"></a-entity>
+                        <a-entity light="intensity:0.8;angle:15;type:spot;penumbra:1;castShadow:true" position="-3 5 2" rotation="-38 -29 5.5"></a-entity>
                     </a-entity>
 
                     <a-entity v-if="item.type === 'top-table'" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : room === 'St James' ? -0.1 : 0)) + ' ' + (item.zPos || 0)">
                         <a-entity v-for="i in item.size" gltf-model="#tt-gltf" :position="((i + 1) * 0.7) + ' 0 0'">
                             <a-entity obj-model="obj: #chair-purple-obj; mtl: #chair-purple-mtl" position="0 0.45 -0.2"></a-entity>
                             <!--<a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.71 0.76 0.007" position="-0.02 0.32 0.35" :material="'src: #felt; color: ' + item.colour + '; repeat: 2 2; roughness: 1; metalness: 0;'"></a-entity>-->
-                            <a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.71 0.76 0.007" position="-0.02 0.32 0.35" :material="'color: ' + item.colour"></a-entity>
+                            <a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.71 0.76 0.007" position="-0.02 0.32 0.35" :material="'src: #felt; color: ' + item.colour"></a-entity>
                         </a-entity>
                         <a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.76 0.76 0.007" :position="((item.size * 0.7) + 1.032) + ' 0.32 -0.029'" rotation="0 90 0" :material="'color: ' + item.colour + '; emissive: ' + item.colour + '; emissiveIntensity: 0.5;'"></a-entity>
                         <a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.76 0.76 0.007" position="1.028 0.32 -0.029" rotation="0 90 0" :material="'color: ' + item.colour + '; emissive: ' + item.colour + '; emissiveIntensity: 0.5;'"></a-entity>
@@ -98,11 +96,19 @@
 
                 </template>
 
-                <a-entity v-if="seatingStyle === 'Theatre'" v-for="chair in getChairs(room)" :position="chair.position" :obj-model="'obj: #chair-' + chair.colour + '-obj; mtl: #chair-' + chair.colour + '-mtl'" rotation="0 180 0"></a-entity>
+                <!--<a-entity v-if="seatingStyle === 'Theatre'" v-for="chair in getChairs(room)" :position="chair.position" :obj-model="'obj: #chair-' + chair.colour + '-obj; mtl: #chair-' + chair.colour + '-mtl'" rotation="0 180 0"></a-entity>-->
+                <!--<a-entity v-if="seatingStyle === 'Theatre'" v-for="chair in getChairs(room)" :position="chair.position" :obj-model="'obj: #chair-' + chair.colour + '-obj;'" :material="'roughness: 1; src: #felt; repeat: 1 1; color: ' + chair.colour" rotation="0 180 0"></a-entity>-->
+                <a-entity v-if="seatingStyle === 'Theatre'" v-for="chair in getChairs(room)">
+                    <a-entity :position="chair.position" obj-model="obj: #chair-top;" :material="'roughness: 1; src: #felt; repeat: 1 1; color: ' + chair.colour" rotation="0 180 0"></a-entity>
+                    <a-entity :position="chair.position" obj-model="obj: #chair-legs-obj; mtl: #chair-legs-mtl;" rotation="0 180 0"></a-entity>
+                </a-entity>
                 <a-entity v-if="seatingStyle === 'Cabaret'" v-for="table in getCabaretTables(room)" :position="table.position" gltf-model="#cabaret-table"></a-entity>
 
-                <a-entity light="type:ambient;intensity:0.1"></a-entity>
-                <a-entity light="intensity:0.8" position="-0.5 2.1 6.3" rotation="19 0 0"></a-entity>
+                <a-entity light="type:ambient;intensity:0.8"></a-entity>
+                <a-entity light="intensity:0.4" position="-0.5 2.1 6.3" rotation="19 0 0"></a-entity>
+
+                <!--<a-entity light="type: spot; angle: 180; distance: 10;" geometry="primitive: plane; height: 2; width: 10" rotation="0 180 0" position="0 0 1"></a-entity>-->
+                <!--<a-entity light="type: directional; color: #FFF; intensity: 0.2" position="0 -10 5"></a-entity>-->
 
                 <a-entity position="0 0 15">
                     <a-camera></a-camera>

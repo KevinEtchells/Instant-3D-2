@@ -12,21 +12,23 @@ var vm;
     "use strict";
 
     const frontRow = function (room) {
-        let furthestPos = 2.4
-        if (room === "Fleming" || room === "Whittle") {
-            // check each stage position
-            vm.items.forEach(function (item) {
-                if (item.type === "stage") {
-                    const newPos = vm.feetToMetres(item.depth) + vm.feetToMetres(item.zPos) - 0.2;
-                    if (furthestPos < newPos) {
-                        furthestPos = newPos;
+        if (vm) {
+            let furthestPos = 2.4;
+            if (room === "Fleming" || room === "Whittle") {
+                // check each stage position
+                vm.items.forEach(function (item) {
+                    if (item.type === "stage") {
+                        const newPos = vm.feetToMetres(item.depth) + vm.feetToMetres(item.zPos) - 0.2;
+                        if (furthestPos < newPos) {
+                            furthestPos = newPos;
+                        }
                     }
-                }
-            });
-        } else if (room === "St James") {
-            furthestPos = 1.8;
+                });
+            } else if (room === "St James") {
+                furthestPos = 1.8;
+            }
+            return furthestPos;
         }
-        return furthestPos;
     };
 
     vm = new Vue({
@@ -35,7 +37,7 @@ var vm;
 
         data: {
             selectedTab: "room",
-            room: "St James",
+            room: "Fleming",
             seatingStyle: "None",
             roomsData: {
                 fixedSet: { // Mountbatten & Churchill
@@ -114,9 +116,9 @@ var vm;
                     for (i = 0; i < maxChairs; i = i + 1) {
                         rnd = Math.random();
                         if (rnd < 0.15 && chairArray[chairArray.length - 1] !== "pink" && chairArray[chairArray.length - 2] !== "pink") {
-                            chairArray.push({colour: "pink"});
+                            chairArray.push({colour: "#B345A7"}); // pink
                         } else {
-                            chairArray.push({colour: "purple"});
+                            chairArray.push({colour: "#7236AE"}); // purple
                         }
                     }
                     return chairArray;
