@@ -84,8 +84,8 @@
 
                     <a-entity v-if="item.type === 'top-table'" :rotation="'0 ' + (item.rot || 0) + ' 0'" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : room === 'St James' ? -0.1 : 0)) + ' ' + (item.zPos || 0)">
                         <a-entity v-for="i in item.size" gltf-model="#tt-gltf" :position="((i + 1) * 0.7) + ' 0 0'">
-                            <a-entity obj-model="obj: #chair-purple-obj; mtl: #chair-purple-mtl" position="0 0.45 -0.2"></a-entity>
-                            <!--<a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.71 0.76 0.007" position="-0.02 0.32 0.35" :material="'src: #felt; color: ' + item.colour + '; repeat: 2 2; roughness: 1; metalness: 0;'"></a-entity>-->
+                            <a-entity position="0 0.45 -0.2" obj-model="obj: #chair-top;" material="roughness: 1; src: #felt; repeat: 1 1; color: #7236AE;"></a-entity>
+                            <a-entity position="0 0.45 -0.2" obj-model="obj: #chair-legs-obj; mtl: #chair-legs-mtl;"></a-entity>
                             <a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.71 0.76 0.007" position="-0.02 0.32 0.35" :material="'src: #felt; color: ' + item.colour"></a-entity>
                         </a-entity>
                         <a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.76 0.76 0.007" :position="((item.size * 0.7) + 1.032) + ' 0.32 -0.029'" rotation="0 90 0" :material="'color: ' + item.colour + '; emissive: ' + item.colour + '; emissiveIntensity: 0.5;'"></a-entity>
