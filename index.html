@@ -12,7 +12,7 @@
 
         <div id="app">
 
-            <a-scene background="color: black" embedded>
+            <a-scene background="color: black" embedded vr-mode-ui="enabled: false">
 
                 <a-assets>
                     <a-asset-item id="churchill" src="assets/rooms/Churchill.glb"></a-asset-item>
@@ -26,6 +26,10 @@
                     <a-asset-item id="bucket-chair" src="assets/bucket-chair.glb"></a-asset-item>
                     <a-asset-item id="coffee-table-obj" src="assets/coffee-table.obj"></a-asset-item>
                     <a-asset-item id="coffee-table-mtl" src="assets/coffee-table.mtl"></a-asset-item>
+                    <a-asset-item id="sofa-obj" src="assets/sofa.obj"></a-asset-item>
+                    <a-asset-item id="sofa-mtl" src="assets/sofa.mtl"></a-asset-item>
+                    <a-asset-item id="sofa-arm-obj" src="assets/sofa-arm.obj"></a-asset-item>
+                    <a-asset-item id="sofa-arm-mtl" src="assets/sofa-arm.mtl"></a-asset-item>
                     <img id="uplighter" src="assets/uplighters.png"/>
                     <a-asset-item id="chromabatten" src="assets/chromabatten.glb"></a-asset-item>
                     <a-asset-item id="chair-top" src="assets/chair-top.obj"></a-asset-item>
@@ -92,12 +96,16 @@
                         <a-entity v-for="i in item.size" gltf-model="#bucket-chair" :rotation="'0 ' + getChairRotation(item.size, i) + ' 0'"  :position="((i + 1) * 0.8) +  ' 0 ' + (Math.pow(Math.abs(getChairRotation(item.size, i)), 1.7) * 0.002)"></a-entity><!-- the Y position isn't linear relative to rotation -->
                     </a-entity>
 
+                    <a-entity v-if="item.type === 'sofa'" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : room === 'St James' ? -0.1 : 0)) + ' ' + (item.zPos || 0)">
+                        <a-entity v-for="i in item.size" obj-model="obj: #sofa-obj; mtl: #sofa-mtl;" :position="((i + 1) * 0.65) +  ' 0 0'"></a-entity>
+                        <a-entity obj-model="obj: #sofa-arm-obj; mtl: #sofa-arm-mtl;" position="1.3 0 0"></a-entity>
+                        <a-entity obj-model="obj: #sofa-arm-obj; mtl: #sofa-arm-mtl;" :position="(1.42 + (item.size * 0.65)) + ' 0 0'"></a-entity>
+                    </a-entity>
+
                     <a-entity v-if="item.type === 'coffee-table'" obj-model="obj: #coffee-table-obj; mtl: #coffee-table-mtl" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : room === 'St James' ? -0.1 : 0)) + ' ' + (item.zPos || 0)"></a-entity>
 
                 </template>
 
-                <!--<a-entity v-if="seatingStyle === 'Theatre'" v-for="chair in getChairs(room)" :position="chair.position" :obj-model="'obj: #chair-' + chair.colour + '-obj; mtl: #chair-' + chair.colour + '-mtl'" rotation="0 180 0"></a-entity>-->
-                <!--<a-entity v-if="seatingStyle === 'Theatre'" v-for="chair in getChairs(room)" :position="chair.position" :obj-model="'obj: #chair-' + chair.colour + '-obj;'" :material="'roughness: 1; src: #felt; repeat: 1 1; color: ' + chair.colour" rotation="0 180 0"></a-entity>-->
                 <a-entity v-if="seatingStyle === 'Theatre'" v-for="chair in getChairs(room)">
                     <a-entity :position="chair.position" obj-model="obj: #chair-top;" :material="'roughness: 1; src: #felt; repeat: 1 1; color: ' + chair.colour" rotation="0 180 0"></a-entity>
                     <a-entity :position="chair.position" obj-model="obj: #chair-legs-obj; mtl: #chair-legs-mtl;" rotation="0 180 0"></a-entity>
@@ -230,7 +238,7 @@
                             </tr>
                             <tr v-if="room === 'St James'">
                                 <td></td>
-                                <td>In-house sSet</td>
+                                <td>In-house Set</td>
                                 <td>N/A</td>
                                 <td><input type="color" v-model="roomsData.fixedSet.setWashCentre"/></td>
                                 <td></td>
@@ -276,7 +284,7 @@
                             <tr/>
                         <thead>
                         <tbody>
-                            <tr v-for="item in items" v-if="item.type === 'lectern' || item.type === 'top-table' || item.type === 'bucket-chairs' || item.type === 'coffee-table'">
+                            <tr v-for="item in items" v-if="item.type === 'lectern' || item.type === 'top-table' || item.type === 'bucket-chairs' || item.type === 'coffee-table' || item.type === 'sofa'">
                                 <td><input type="checkbox" v-model="item.selected" v-on:click="selectItem(item)"/></td>
                                 <td>
                                     <select v-if="item.type === 'bucket-chairs' || item.type === 'white chairs'" v-model="item.type">
@@ -284,7 +292,7 @@
                                     </select>
                                     <span v-else>{{item.type}}</span>
                                 </td>
-                                <td><input v-if="item.type === 'top-table' || item.type === 'bucket-chairs'" type="number" v-model.number="item.size"/><span v-else>N/A</span></td>
+                                <td><input v-if="item.type === 'top-table' || item.type === 'bucket-chairs' || item.type === 'sofa'" type="number" v-model.number="item.size"/><span v-else>N/A</span></td>
                                 <td><input v-if="item.type === 'lectern' || item.type === 'top-table' && item.modpanel" type="color" v-model="item.colour"/><span v-else>N/A</span></td>
                                 <td>
                                     <label v-if="item.type === 'top-table'"><input type="checkbox" v-model="item.modpanel"/> Mod Panel</lable>
@@ -297,6 +305,7 @@
                         <button v-on:click="addItem('lectern', 4, -0.73, 2.1)">Add Lectern</button>
                         <button v-on:click="addItem('top-table', -5, 0.68, 0.7)">Add Top Table</button>
                         <button v-on:click="addItem('bucket-chairs', -5, 0.68, 0.7)">Add Chairs</button>
+                        <button v-on:click="addItem('sofa', -5, 0.68, 0.7)">Add Sofa</button>
                         <button v-on:click="addItem('coffee-table', -5, 0.68, 0.7)">Add Coffee Table</button>
                     </div>
                 </div>
