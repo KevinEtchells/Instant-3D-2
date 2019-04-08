@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8"/>
-        <title>i3D</title>
+        <title>Instant 3D 2</title>
         <script src="js/libs/aframe-master.min.js"></script>
         <script src="js/libs/vue.min.js"></script>
         <script src="js/libs/FileSaver.min.js" defer></script>
@@ -12,7 +12,7 @@
 
         <div id="app">
 
-            <a-scene background="color: black" embedded vr-mode-ui="enabled: false">
+            <a-scene background="color: black" embedded>
 
                 <a-assets>
                     <a-asset-item id="churchill" src="assets/rooms/Churchill.glb"></a-asset-item>
@@ -26,10 +26,6 @@
                     <a-asset-item id="bucket-chair" src="assets/bucket-chair.glb"></a-asset-item>
                     <a-asset-item id="coffee-table-obj" src="assets/coffee-table.obj"></a-asset-item>
                     <a-asset-item id="coffee-table-mtl" src="assets/coffee-table.mtl"></a-asset-item>
-                    <a-asset-item id="sofa-obj" src="assets/sofa.obj"></a-asset-item>
-                    <a-asset-item id="sofa-mtl" src="assets/sofa.mtl"></a-asset-item>
-                    <a-asset-item id="sofa-arm-obj" src="assets/sofa-arm.obj"></a-asset-item>
-                    <a-asset-item id="sofa-arm-mtl" src="assets/sofa-arm.mtl"></a-asset-item>
                     <img id="uplighter" src="assets/uplighters.png"/>
                     <a-asset-item id="chromabatten" src="assets/chromabatten.glb"></a-asset-item>
                     <a-asset-item id="chair-top" src="assets/chair-top.obj"></a-asset-item>
@@ -47,15 +43,15 @@
 
                 <template v-for="item in items">
 
-                    <a-box v-if="item.type === 'stage' && (room === 'Fleming' || room === 'Whittle')" :width="feetToMetres(item.width)" :height="feetToMetres(item.height)" :depth="feetToMetres(item.depth)" :rotation="'0 ' + (item.rot || 0) + ' 0'" :position="feetToMetres(item.xPos || 0) + ' ' + feetToMetres((item.yPos || 0) + (item.height / 2)) + ' ' + feetToMetres(item.zPos || 0)" color="#111"></a-box>
+                    <a-box v-if="item.type === 'stage' && (room === 'Fleming' || room === 'Whittle')" :width="feetToMetres(item.width)" :height="feetToMetres(item.height)" :depth="feetToMetres(item.depth)" :position="feetToMetres(item.xPos || 0) + ' ' + feetToMetres((item.yPos || 0) + (item.height / 2)) + ' ' + feetToMetres(item.zPos || 0)" color="#111"></a-box>
                     <a-box v-if="item.type === 'stage' && room === 'St James'" position="0 0.3 0" :width="feetToMetres(28)" :height="feetToMetres(1.34)" :depth="feetToMetres(8)" color="#111"></a-box>
 
                     <a-box v-if="item.type === 'set' && room === 'Churchill'" :color="roomsData.fixedSet.setWashCentre" width="6.1" height="4.57" depth="0.05" src="#uplighter" position="0 3 -4.5"></a-box>
                     <a-box v-if="item.type === 'set' && room === 'Churchill'" :color="roomsData.fixedSet.setWashCentre" width="8.5" height="4.57" depth="0.05" src="#uplighter" position="-6 3 -1.7" rotation="0 41.5 0"></a-box>
                     <a-box v-if="item.type === 'set' && room === 'Churchill'" :color="roomsData.fixedSet.setWashCentre" width="8.5" height="4.57" depth="0.05" src="#uplighter" position="6 3 -1.7" rotation="0 -41.5 0"></a-box>
-                    <a-entity v-if="item.type === 'set' && (room === 'Fleming' || room === 'Whittle')" :rotation="'0 ' + (item.rot || 0) + ' 0'" :position="feetToMetres((item.width / -2) - 2 + (item.xPos || 0)) + ' ' + (feetToMetres(item.yPos || 0) + feetToMetres(5.5)) + ' ' + feetToMetres(item.zPos || 0)">
-                        <a-entity geometry="primitive: box" v-for="i in (item.width / 4)" :position="i * 1.2205 + ' 0 0'" :scale="'1.22 ' + feetToMetres(11) + ' 0.05'" :material="'src: #uplighter; color: ' + (item.lighting || '#FFF') + '; emissiveIntensity: 0; emissive: ' + (item.lighting || '#FFF')"></a-entity>
-                        <a-entity v-for="i in (item.width / 4)" :position="i * 1.2205 + ' ' + (feetToMetres(-5.5) + 0.07) + ' 0'" gltf-model="#chromabatten"></a-entity>
+                    <a-entity v-if="item.type === 'set' && (room === 'Fleming' || room === 'Whittle')" :position="feetToMetres((item.width / -2) - 2 + (item.xPos || 0)) + ' ' + (feetToMetres(item.yPos || 0) + feetToMetres(5.5)) + ' ' + feetToMetres(item.zPos || 0)">
+                        <a-entity geometry="primitive: box" v-for="i in (item.width / 4)" :position="i * 1.2205 + ' 0 0'" :scale="'1.22 ' + feetToMetres(11) + ' 0.05'" :material="'repeat: 1 1; src: #uplighter; color: ' + (item.lighting || '#FFF') + '; emissiveIntensity: 0; emissive: ' + (item.lighting || '#FFF')"></a-entity>
+                        <a-entity v-for="i in (item.width / 4)" :position="i * 1.2205 + ' ' + (feetToMetres(-5.5) + 0.07) + ' 0.15'" gltf-model="#chromabatten"></a-entity>
                     </a-entity>
                     <a-entity v-if="item.type === 'set' && room === 'St James'" scale="1.03 1 1" position="0 0 -1.4" obj-model="obj: #set-4thfloor;" :material="'src: #uplighter; transparent: true; color: ' + roomsData.fixedSet.setWashCentre"></a-entity>
                     <a-box v-if="item.type === 'set' && room === 'Mountbatten'" :color="roomsData.fixedSet.setWashCentre" width="9.8" height="4.7" depth="0.05" src="#uplighter" position="0 2.3 -1"></a-box>
@@ -64,7 +60,7 @@
 
                     <template v-if="item.type === 'screen'">
                         <a-box v-if="room === 'Churchill'" width="5.8" height="3.26" depth="0.05" position="0 4 -3.9"></a-box>
-                        <a-box v-if="room === 'Fleming' || room === 'Whittle'" :width="feetToMetres(item.width)" :height="feetToMetres(item.height)" depth="0.05" color="#FFF" :rotation="'0 ' + (item.rot || 0) + ' 0'" :position="'0 ' + feetToMetres((item.yPos || 0) + (item.height / 2)) + ' ' + feetToMetres(item.zPos || 0)">
+                        <a-box v-if="room === 'Fleming' || room === 'Whittle'" :width="feetToMetres(item.width)" :height="feetToMetres(item.height)" depth="0.05" color="#FFF" :position="'0 ' + feetToMetres((item.yPos || 0) + (item.height / 2)) + ' ' + feetToMetres(item.zPos || 0)">
                             <a-box v-if="item.surround" :width="feetToMetres(item.width + (2 * item.surround))" :height="feetToMetres(item.height + (2 * item.surround))" depth="0.05" color="#000" position="0 0 -0.02"></a-box>
                         </a-box>
                         <a-box v-if="room === 'St James'" width="2.7" height="1.52" depth="0.03" position="0 2.3 -1.3"></a-box>
@@ -75,34 +71,28 @@
                     <a-image v-if="item.type === 'graphic' && (room === 'Fleming' || room === 'Whittle' || room === 'St James')" :position="(item.xPos || 0) + ' ' + (item.yPos || 0) + ' ' + ((item.zPos || 0) + 0.02)" opacity="0.8" :width="item.width" :height="item.width * item.ratio" :src="'user-content/' + item.src"></a-image>
                     <a-image v-if="item.type === 'graphic' && room === 'Mountbatten'" :rotation="item.xPos > 4.9 ? '0 -60 0' : item.xPos < -4.9 ? '0 60 0' : '0 0 0'" :position="(item.xPos || 0) + ' ' + (item.yPos || 0) + ' ' + ((item.zPos || 0) + 0.02)" opacity="0.8" :width="item.width" :height="item.width * item.ratio" :src="'user-content/' + item.src"></a-image>
 
-                    <a-entity v-if="item.type === 'lectern'" :rotation="'0 ' + (item.rot || 0) + ' 0'" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.11 : room === 'St James' ? -0.1 : 0)) + ' ' + (item.zPos || 0)">
+                    <a-entity v-if="item.type === 'lectern'" rotation="0 -15 0" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.11 : room === 'St James' ? -0.1 : 0)) + ' ' + (item.zPos || 0)">
                         <a-entity obj-model="obj: #felt-lectern-external;" :material="'roughness: 1; src: #felt; repeat: 1 1; color: ' + item.colour"></a-entity>
                         <a-entity obj-model="obj: #felt-lectern-internal;" material="color: #000;"></a-entity>
                         <a-entity light="intensity:0.8;angle:15;type:spot;penumbra:1;castShadow:true" position="3 5 1" rotation="-41.6 43.4 28.9"></a-entity>
                         <a-entity light="intensity:0.8;angle:15;type:spot;penumbra:1;castShadow:true" position="-3 5 2" rotation="-38 -29 5.5"></a-entity>
                     </a-entity>
 
-                    <a-entity v-if="item.type === 'top-table'" :rotation="'0 ' + (item.rot || 0) + ' 0'" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : room === 'St James' ? -0.1 : 0)) + ' ' + (item.zPos || 0)">
+                    <a-entity v-if="item.type === 'top-table'" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : room === 'St James' ? -0.1 : 0)) + ' ' + (item.zPos || 0)">
                         <a-entity v-for="i in item.size" gltf-model="#tt-gltf" :position="((i + 1) * 0.7) + ' 0 0'">
-                            <a-entity position="0 0.45 -0.2" obj-model="obj: #chair-top;" material="roughness: 1; src: #felt; repeat: 1 1; color: #7236AE;"></a-entity>
-                            <a-entity position="0 0.45 -0.2" obj-model="obj: #chair-legs-obj; mtl: #chair-legs-mtl;"></a-entity>
+                            <a-entity obj-model="obj: #chair-purple-obj; mtl: #chair-purple-mtl" position="0 0.45 -0.2"></a-entity>
+                            <!-- :material="'src: #felt; color: ' + item.colour + '; repeat: 2 2; roughness: 1; metalness: 0;'" -->
                             <a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.71 0.76 0.007" position="-0.02 0.32 0.35" :material="'src: #felt; color: ' + item.colour"></a-entity>
                         </a-entity>
                         <a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.76 0.76 0.007" :position="((item.size * 0.7) + 1.032) + ' 0.32 -0.029'" rotation="0 90 0" :material="'color: ' + item.colour + '; emissive: ' + item.colour + '; emissiveIntensity: 0.5;'"></a-entity>
                         <a-entity v-if="item.modpanel" geometry="primitive: box" scale="0.76 0.76 0.007" position="1.028 0.32 -0.029" rotation="0 90 0" :material="'color: ' + item.colour + '; emissive: ' + item.colour + '; emissiveIntensity: 0.5;'"></a-entity>
                     </a-entity>
 
-                    <a-entity v-if="item.type === 'bucket-chairs'" :rotation="'0 ' + (item.rot || 0) + ' 0'" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : room === 'St James' ? -0.1 : 0)) + ' ' + (item.zPos || 0)">
+                    <a-entity v-if="item.type === 'bucket-chairs'" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : room === 'St James' ? -0.1 : 0)) + ' ' + (item.zPos || 0)">
                         <a-entity v-for="i in item.size" gltf-model="#bucket-chair" :rotation="'0 ' + getChairRotation(item.size, i) + ' 0'"  :position="((i + 1) * 0.8) +  ' 0 ' + (Math.pow(Math.abs(getChairRotation(item.size, i)), 1.7) * 0.002)"></a-entity><!-- the Y position isn't linear relative to rotation -->
                     </a-entity>
 
-                    <a-entity v-if="item.type === 'sofa'" :rotation="'0 ' + (item.rot || 0) + ' 0'" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : room === 'St James' ? -0.1 : 0)) + ' ' + (item.zPos || 0)">
-                        <a-entity v-for="i in item.size" obj-model="obj: #sofa-obj; mtl: #sofa-mtl;" :position="((i + 1) * 0.65) +  ' 0 0'"></a-entity>
-                        <a-entity obj-model="obj: #sofa-arm-obj; mtl: #sofa-arm-mtl;" position="1.3 0 0"></a-entity>
-                        <a-entity obj-model="obj: #sofa-arm-obj; mtl: #sofa-arm-mtl;" :position="(1.42 + (item.size * 0.65)) + ' 0 0'"></a-entity>
-                    </a-entity>
-
-                    <a-entity v-if="item.type === 'coffee-table'" obj-model="obj: #coffee-table-obj; mtl: #coffee-table-mtl" :rotation="'0 ' + (item.rot || 0) + ' 0'" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : room === 'St James' ? -0.1 : 0)) + ' ' + (item.zPos || 0)"></a-entity>
+                    <a-entity v-if="item.type === 'coffee-table'" obj-model="obj: #coffee-table-obj; mtl: #coffee-table-mtl" :position="(item.xPos || 0) + ' ' + ((item.yPos || 0) + (room === 'Churchill' ? 0.12 : room === 'St James' ? -0.1 : 0)) + ' ' + (item.zPos || 0)"></a-entity>
 
                 </template>
 
@@ -238,7 +228,7 @@
                             </tr>
                             <tr v-if="room === 'St James'">
                                 <td></td>
-                                <td>In-house Set</td>
+                                <td>In-house sSet</td>
                                 <td>N/A</td>
                                 <td><input type="color" v-model="roomsData.fixedSet.setWashCentre"/></td>
                                 <td></td>
@@ -284,7 +274,7 @@
                             <tr/>
                         <thead>
                         <tbody>
-                            <tr v-for="item in items" v-if="item.type === 'lectern' || item.type === 'top-table' || item.type === 'bucket-chairs' || item.type === 'coffee-table' || item.type === 'sofa'">
+                            <tr v-for="item in items" v-if="item.type === 'lectern' || item.type === 'top-table' || item.type === 'bucket-chairs' || item.type === 'coffee-table'">
                                 <td><input type="checkbox" v-model="item.selected" v-on:click="selectItem(item)"/></td>
                                 <td>
                                     <select v-if="item.type === 'bucket-chairs' || item.type === 'white chairs'" v-model="item.type">
@@ -292,7 +282,7 @@
                                     </select>
                                     <span v-else>{{item.type}}</span>
                                 </td>
-                                <td><input v-if="item.type === 'top-table' || item.type === 'bucket-chairs' || item.type === 'sofa'" type="number" v-model.number="item.size"/><span v-else>N/A</span></td>
+                                <td><input v-if="item.type === 'top-table' || item.type === 'bucket-chairs'" type="number" v-model.number="item.size"/><span v-else>N/A</span></td>
                                 <td><input v-if="item.type === 'lectern' || item.type === 'top-table' && item.modpanel" type="color" v-model="item.colour"/><span v-else>N/A</span></td>
                                 <td>
                                     <label v-if="item.type === 'top-table'"><input type="checkbox" v-model="item.modpanel"/> Mod Panel</lable>
@@ -305,7 +295,6 @@
                         <button v-on:click="addItem('lectern', 4, -0.73, 2.1)">Add Lectern</button>
                         <button v-on:click="addItem('top-table', -5, 0.68, 0.7)">Add Top Table</button>
                         <button v-on:click="addItem('bucket-chairs', -5, 0.68, 0.7)">Add Chairs</button>
-                        <button v-on:click="addItem('sofa', -5, 0.68, 0.7)">Add Sofa</button>
                         <button v-on:click="addItem('coffee-table', -5, 0.68, 0.7)">Add Coffee Table</button>
                     </div>
                 </div>
